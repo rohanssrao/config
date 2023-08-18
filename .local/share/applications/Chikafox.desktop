@@ -1,0 +1,13 @@
+[Desktop Entry]
+Exec=firefox -P Chika
+Icon=firefox
+Name=Chikafox
+NoDisplay=false
+Type=Application
+Name[en_US.UTF-8]=Firefox (Chika)
+X-GNOME-FullName[en_US.UTF-8]=Firefox (Chika)
+Comment[en_US.UTF-8]=Chikafox
+Path=
+Terminal=false
+X-GNOME-UsesNotifications=false
+Categories=Network;

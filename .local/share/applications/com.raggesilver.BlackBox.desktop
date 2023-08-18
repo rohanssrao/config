@@ -1,0 +1,33 @@
+[Desktop Entry]
+Name[cs]=Black Box
+Name[de]=Black Box
+Name[es]=Black Box
+Name[fr]=Boîte Noire
+Name[it]=Scatola nera
+Name[nl]=Black Box
+Name[ru]=Чёрный Ящик
+Name[sv]=Black Box
+Name[tr]=Kara Kutu
+Name[zh_CN]=Black Box
+Name[pt_BR]=Black Box
+Name=Black Box
+Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=blackbox com.raggesilver.BlackBox
+Terminal=false
+Type=Application
+Categories=GNOME;GTK;System;TerminalEmulator;
+StartupNotify=false
+Keywords[cs]=Terminal;terminal;shell;prompt;command;commandline;cmd;box;příkazový řádek;terminál;
+Keywords[de]=Terminal;terminal;shell;prompt;kommando;kommandozeile;cmd;box;
+Keywords[es]=Terminal;terminal;shell;prompt;command;commandline;cmd;box;comando;línea;consola;caja;
+Keywords[fr]=Terminal;terminal;shell;prompt;command;commandline;cmd;box;ligne de commande;boîte;
+Keywords[it]=Terminale;terminale;shell;prompt;comando;riga;cmd;black;box;scatola;nera
+Keywords[nl]=Terminal;terminal;shell;prompt;opdracht;commando;opdrachtregel;cmd;box;
+Keywords[ru]=Терминал;терминал;оболочка;строка;команда;командная строка;cmd;box;
+Keywords[sv]=Terminal;terminal;skal;prompt;kommando;kommandorad;cmd;box;
+Keywords[tr]=Uçbirim;uçbirim;shell;kabuk;komut satırı;komut;cmd;box;kutu;
+Keywords[zh_CN]=Terminal;terminal;shell;prompt;command;commandline;cmd;box;
+Keywords[pt_BR]=Terminal;terminal;shell;prompt;command;commandline;cmd;box;comando;linha;console;
+Keywords=Terminal;terminal;shell;prompt;command;commandline;cmd;box;
+Icon=/home/chika/.local/share/icons/custom/terminal.svg
+X-GNOME-UsesNotifications=true
+X-Flatpak=com.raggesilver.BlackBox

@@ -1,0 +1,26 @@
+[MIME Cache]
+application/bzip2=org.gnome.Nautilus.desktop;
+application/gzip=org.gnome.Nautilus.desktop;
+application/vnd.rar=org.gnome.Nautilus.desktop;
+application/x-7z-compressed=org.gnome.Nautilus.desktop;
+application/x-7z-compressed-tar=org.gnome.Nautilus.desktop;
+application/x-bzip=org.gnome.Nautilus.desktop;
+application/x-bzip-compressed-tar=org.gnome.Nautilus.desktop;
+application/x-compress=org.gnome.Nautilus.desktop;
+application/x-compressed-tar=org.gnome.Nautilus.desktop;
+application/x-cpio=org.gnome.Nautilus.desktop;
+application/x-gzip=org.gnome.Nautilus.desktop;
+application/x-lha=org.gnome.Nautilus.desktop;
+application/x-lzip=org.gnome.Nautilus.desktop;
+application/x-lzip-compressed-tar=org.gnome.Nautilus.desktop;
+application/x-lzma=org.gnome.Nautilus.desktop;
+application/x-lzma-compressed-tar=org.gnome.Nautilus.desktop;
+application/x-tar=org.gnome.Nautilus.desktop;
+application/x-tarz=org.gnome.Nautilus.desktop;
+application/x-xar=org.gnome.Nautilus.desktop;
+application/x-xz=org.gnome.Nautilus.desktop;
+application/x-xz-compressed-tar=org.gnome.Nautilus.desktop;
+application/zip=org.gnome.Nautilus.desktop;
+inode/directory=org.gnome.Nautilus.desktop;
+x-scheme-handler/sms=org.gnome.Shell.Extensions.GSConnect.desktop;
+x-scheme-handler/tel=org.gnome.Shell.Extensions.GSConnect.desktop;
