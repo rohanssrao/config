@@ -2,6 +2,7 @@ set fish_prompt_pwd_dir_length 3
 set fish_greeting
 
 alias home='home-manager'
+alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias flatpaks='$EDITOR ~/.config/home-manager/modules/flatpak/flatpaks.txt'
 alias restartdm='sudo systemctl restart display-manager'
 alias open='xdg-open 2>/dev/null'
@@ -23,6 +24,11 @@ alias code='flatpak run com.visualstudio.code'
 
 bind \el forward-char
 any-nix-shell fish --info-right | source
+
+set -x SHELL "$(which fish)"
+set -x EDITOR "$(which lvim)"
+set -x SUDO_EDITOR "$EDITOR"
+set -x VISUAL "$EDITOR"
 
 ####### Vi Mode ########
 #for mode in insert default visual
