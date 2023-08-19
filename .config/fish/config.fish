@@ -1,7 +1,6 @@
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
 
-alias home='home-manager'
 alias cfg='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias flatpaks='$EDITOR ~/.config/home-manager/modules/flatpak/flatpaks.txt'
 alias restartdm='sudo systemctl restart display-manager'

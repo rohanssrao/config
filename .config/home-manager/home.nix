@@ -30,7 +30,8 @@
     gnomeExtensions.user-themes
     gnomeExtensions.removable-drive-menu
     #gnomeExtensions.gsconnect
-
+    
+    
   ];
 
   programs.home-manager.enable = true;

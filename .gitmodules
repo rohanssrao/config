@@ -1,0 +1,6 @@
+[submodule ".local/share/fonts/custom/SF Pro"]
+	path = .local/share/fonts/custom/SF Pro
+	url = https://github.com/sahibjotsaggu/San-Francisco-Pro-Fonts
+[submodule ".local/share/fonts/custom/Liga SF Mono Nerd Font"]
+	path = .local/share/fonts/custom/Liga SF Mono Nerd Font
+	url = https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
