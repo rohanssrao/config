@@ -8,6 +8,12 @@ lvim.colorscheme = "nord"
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
 
+-- tab to indent
+vim.opt.autoindent = true
+vim.cmd("set noexpandtab")
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+
 -- sudo save
 vim.cmd("cnoremap w!! w !sudo tee %")
 

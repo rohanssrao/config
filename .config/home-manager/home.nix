@@ -27,10 +27,11 @@
     gnomeExtensions.disable-workspace-switch-animation-for-gnome-40
     gnomeExtensions.gesture-improvements
     gnomeExtensions.just-perfection
-    gnomeExtensions.user-themes
     gnomeExtensions.removable-drive-menu
     #gnomeExtensions.gsconnect
+	#gnomeExtensions.user-themes
     
+	corefonts
     
   ];
 
@@ -41,7 +42,7 @@
   };
 
   home.username = "chika";
-  home.homeDirectory = "/var/home/chika";
+  home.homeDirectory = "/home/chika";
 
   home.stateVersion = "23.05"; # Don't change
 

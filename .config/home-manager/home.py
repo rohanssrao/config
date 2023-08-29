@@ -9,6 +9,7 @@ import subprocess
 HOME_MANAGER_CONFIG_PATH = os.path.expanduser("~/.config/home-manager/home.nix")
 MAX_SEARCH_RESULTS = 5
 
+
 def switch(data):
 	with open(HOME_MANAGER_CONFIG_PATH, "w") as file:
 		file.writelines(data)
@@ -18,6 +19,7 @@ def switch(data):
 		with open(HOME_MANAGER_CONFIG_PATH, "w") as file:
 			file.writelines(original_data)
 	sys.exit(return_code)
+
 
 # check if the file exists
 if not os.path.isfile(HOME_MANAGER_CONFIG_PATH):
@@ -41,10 +43,11 @@ do_install = sys.argv[1] == "install"
 pkg_name = sys.argv[2]
 
 # verify the package exists
-try:
-	subprocess.check_output(["nix", "search", "nixpkgs#" + pkg_name])
-except subprocess.CalledProcessError as e:
-	sys.exit(e.returncode)
+if do_install:
+	try:
+		subprocess.check_output(["nix", "search", "nixpkgs#" + pkg_name])
+	except subprocess.CalledProcessError as e:
+		sys.exit(e.returncode)
 
 with open(HOME_MANAGER_CONFIG_PATH, "r") as file:
 	data = file.readlines()
@@ -93,3 +96,4 @@ data.insert(end, f"{indentation}{pkg_name}\n")
 
 print(f"Installing {pkg_name}...")
 switch(data)
+
