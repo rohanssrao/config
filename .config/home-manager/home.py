@@ -43,11 +43,11 @@ do_install = sys.argv[1] == "install"
 pkg_name = sys.argv[2]
 
 # verify the package exists
-if do_install:
-	try:
-		subprocess.check_output(["nix", "search", "nixpkgs#" + pkg_name])
-	except subprocess.CalledProcessError as e:
-		sys.exit(e.returncode)
+# if do_install:
+# 	try:
+# 		subprocess.check_output(["nix", "search", "nixpkgs#" + pkg_name])
+# 	except subprocess.CalledProcessError as e:
+# 		sys.exit(e.returncode)
 
 with open(HOME_MANAGER_CONFIG_PATH, "r") as file:
 	data = file.readlines()

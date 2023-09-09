@@ -29,21 +29,19 @@
     gnomeExtensions.just-perfection
     gnomeExtensions.removable-drive-menu
     #gnomeExtensions.gsconnect
-	#gnomeExtensions.user-themes
+		#gnomeExtensions.user-themes
     
-	corefonts
+		corefonts
     
   ];
-
-  programs.home-manager.enable = true;
-
-  nixpkgs.config = {
-    allowUnfree = true;
-  };
 
   home.username = "chika";
   home.homeDirectory = "/home/chika";
 
   home.stateVersion = "23.05"; # Don't change
+
+  programs.home-manager.enable = true;
+
+	news.display = "silent";
 
 }

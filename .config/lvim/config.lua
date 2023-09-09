@@ -11,8 +11,8 @@ lvim.format_on_save.enabled = false
 -- tab to indent
 vim.opt.autoindent = true
 vim.cmd("set noexpandtab")
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 
 -- sudo save
 vim.cmd("cnoremap w!! w !sudo tee %")
