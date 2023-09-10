@@ -14,15 +14,14 @@ alias neofetch='neowofetch'
 alias docker='podman'
 
 alias meld='flatpak run org.gnome.meld'
-alias code='flatpak run com.visualstudio.code'
 
 # Alt-L to accept single word from autocomplete
-bind \el forward-bigword
+bind \el forward-word
+
+any-nix-shell fish --info-right | source
 
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
-
-any-nix-shell fish --info-right | source
 
 set -x SHELL "$(which fish)"
 set -x EDITOR "$(which lvim)"

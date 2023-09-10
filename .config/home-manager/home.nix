@@ -19,6 +19,8 @@
     github-copilot-cli
     any-nix-shell
     obsidian
+		direnv
+		corefonts
 
     gnomeExtensions.appindicator
     gnomeExtensions.arcmenu
@@ -31,7 +33,6 @@
     #gnomeExtensions.gsconnect
 		#gnomeExtensions.user-themes
     
-		corefonts
     
   ];
 
