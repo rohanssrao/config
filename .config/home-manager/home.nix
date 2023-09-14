@@ -17,9 +17,6 @@
     age
     lolcat
     github-copilot-cli
-    any-nix-shell
-    obsidian
-		direnv
 		corefonts
 
     gnomeExtensions.appindicator
@@ -32,7 +29,6 @@
     gnomeExtensions.removable-drive-menu
     #gnomeExtensions.gsconnect
 		#gnomeExtensions.user-themes
-    
     
   ];
 

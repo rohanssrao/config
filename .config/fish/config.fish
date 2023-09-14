@@ -18,8 +18,6 @@ alias meld='flatpak run org.gnome.meld'
 # Alt-L to accept single word from autocomplete
 bind \el forward-word
 
-any-nix-shell fish --info-right | source
-
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
 
