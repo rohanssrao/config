@@ -12,7 +12,7 @@
     gcc
     fd
     ripgrep
-    exa
+    eza
     bat
     age
     lolcat
@@ -29,6 +29,8 @@
     gnomeExtensions.removable-drive-menu
     #gnomeExtensions.gsconnect
 		#gnomeExtensions.user-themes
+		powertop
+		lazygit
     
   ];
 
