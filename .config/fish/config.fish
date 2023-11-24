@@ -3,12 +3,12 @@ alias restartdm='sudo systemctl restart display-manager'
 alias open='xdg-open 2>/dev/null'
 alias cp='cp -i'
 alias mv='mv -i'
+alias copy='xclip -selection c'
 alias ls='exa -a --icons'
 alias lg='lazygit'
-alias cat='bat'
 alias vim='lvim'
-alias fzfd='fd -H --type d . ~ | fzf'
-alias vimf='vim (fd -H --type f . ~ | fzf)'
+alias fzfd='fd -H --type d . ~ | fzf -i'
+alias vimf='vim (fd -H --type f . ~ | fzf -i)'
 alias cdf='cd (fzfd)'
 alias YEP='yes'
 alias neofetch='neowofetch'
@@ -18,6 +18,9 @@ alias meld='flatpak run org.gnome.meld'
 
 # Alt-L to accept single word from autocomplete
 bind \el forward-word
+# Vim-style history navigation
+bind \ek 'up-or-search'
+bind \ej 'down-or-search'
 
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
