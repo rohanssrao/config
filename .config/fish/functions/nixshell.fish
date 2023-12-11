@@ -10,6 +10,9 @@ function nixshell
       packages = with pkgs; [
 				
       ];
+			shellHook = ''
+				exec fish
+			'';
     };
   };
 }' > flake.nix
