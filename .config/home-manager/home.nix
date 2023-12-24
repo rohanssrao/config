@@ -2,31 +2,28 @@
 
 {
 
-  home.packages = with pkgs; [
+	home.packages = with pkgs; [
   
-    fish
-    neovim
-      python311Packages.flake8
+		fish
+		neovim
+			python311Packages.flake8
 			xclip
-    fastfetch
+		fastfetch
 		eza
-    gcc
-    fd
-    ripgrep
-    bat
-    age
-    lolcat
-		powertop
-		lazygit
-    
-  ];
+		gcc
+		fd
+		ripgrep
+		bat
+		lolcat
 
-  home.username = "chika";
-  home.homeDirectory = "/home/chika";
+	];
 
-  home.stateVersion = "23.05"; # Don't change
+	home.username = "chika";
+	home.homeDirectory = "/home/chika";
 
-  programs.home-manager.enable = true;
+	home.stateVersion = "23.05"; # Don't change
+
+	programs.home-manager.enable = true;
 
 	news.display = "silent";
 

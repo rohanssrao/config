@@ -20,6 +20,8 @@ bind \ek 'up-or-search'
 set fish_prompt_pwd_dir_length 3 # lengthen prompt
 set fish_greeting # clear greeting
 
+fish_add_path ~/Backups/scripts
+
 set -x SHELL "$(which fish)"
 set -x EDITOR "$(which lvim)"
 set -x SUDO_EDITOR "$EDITOR"

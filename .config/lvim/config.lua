@@ -7,6 +7,7 @@ lvim.plugins = {
 lvim.colorscheme = "nord"
 lvim.log.level = "warn"
 lvim.format_on_save.enabled = false
+lvim.builtin.autopairs.active = false
 
 -- tab to indent
 vim.opt.autoindent = true
