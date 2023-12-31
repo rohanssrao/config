@@ -5,15 +5,15 @@
 	home.packages = with pkgs; [
   
 		fish
-		neovim
-			python311Packages.flake8
-			xclip
-		fastfetch
-		eza
+		lunarvim
+		xclip
 		gcc
-		fd
+		eza
 		ripgrep
+		fd
 		bat
+		tldr
+		fastfetch
 		lolcat
 
 	];

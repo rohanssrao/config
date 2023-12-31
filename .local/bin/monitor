@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-ddcutil setvcp 10 ${1} 10 --sleep-multiplier 0.05
