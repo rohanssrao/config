@@ -4,7 +4,7 @@
 
 import sys
 import os
-import subprocess
+# import subprocess
 
 HOME_MANAGER_CONFIG_PATH = os.path.expanduser("~/.config/home-manager/home.nix")
 MAX_SEARCH_RESULTS = 5
