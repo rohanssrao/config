@@ -237,8 +237,8 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
 		set envs $envs "py[$py_env]"
 	end
 
-	if test "$IN_NIX_SHELL"
-		set envs $envs " [$IN_NIX_SHELL]"
+	if test "$IN_NIX_SHELL"; or string match -eq "/nix/store" "$PATH"
+		set envs $envs " [shell]"
 	end
 
 	if test "$envs"

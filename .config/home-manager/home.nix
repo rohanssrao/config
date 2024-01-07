@@ -15,7 +15,6 @@
 		tldr
 		fastfetch
 		lolcat
-		mkchromecast
 
 	];
 
