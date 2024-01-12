@@ -15,6 +15,8 @@
 		tldr
 		fastfetch
 		lolcat
+		pv
+		spotdl
 
 	];
 
@@ -23,8 +25,8 @@
 
 	home.stateVersion = "23.05"; # Don't change
 
-	programs.home-manager.enable = true;
-
 	news.display = "silent";
+
+	programs.home-manager.enable = true;
 
 }

@@ -15,11 +15,6 @@ vim.cmd("set noexpandtab")
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 
--- sudo save
-vim.cmd("cnoremap w!! w !sudo tee %")
-
--- vim.cmd("set relativenumber")
-
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
 vim.opt.timeoutlen = 250
