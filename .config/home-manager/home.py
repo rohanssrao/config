@@ -96,4 +96,3 @@ data.insert(end, f"{indentation}{pkg_name}\n")
 
 print(f"Installing {pkg_name}...")
 switch(data)
-

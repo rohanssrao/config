@@ -23,7 +23,7 @@
 	home.username = "chika";
 	home.homeDirectory = "/home/chika";
 
-	home.stateVersion = "23.05"; # Don't change
+	home.stateVersion = "23.11"; # Don't change
 
 	news.display = "silent";
 
