@@ -188,9 +188,9 @@ end
 # ===========================
 
 function prompt_distro -d "Display the icon of your distro"
-	if [ "(uname)" = "Darwin" ]
+	if [ (uname) = "Darwin" ]
 		set icon ""
-	else if [ "(uname)" = "Linux" ]
+	else if [ (uname) = "Linux" ]
 		switch (sed -nr 's/^ID=(.*)/\1/p' /etc/os-release)
 			case fedora
 				set icon ""
