@@ -202,7 +202,7 @@ function prompt_distro -d "Display the icon of your distro"
 				set icon ""
 			case kali
 				set icon ""
-			default
+			case '*'
 				set icon "󰌽"
 			end
 	end
