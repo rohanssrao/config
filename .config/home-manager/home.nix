@@ -17,6 +17,7 @@
 		lolcat
 		pv
 		spotdl
+		lazygit
 
 	];
 
