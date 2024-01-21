@@ -7,8 +7,8 @@ alias ls='eza -a --icons'
 alias lg='lazygit'
 alias vim='lvim'
 alias fzfd='fd -H --type d --max-depth 7 . ~ | fzf -i'
-alias vimf='vim $(fd -H --type f --max-depth 7 . ~ | fzf -i || echo \'--version\')'
-alias cdf='cd $(fzfd)'
+alias vimf='vim (fd -H --type f --max-depth 7 . ~ | fzf -i || echo \'--version\')'
+alias cdf='cd (fzfd)'
 alias YEP='yes'
 alias restartdm='sudo systemctl restart display-manager'
 alias meld='flatpak run org.gnome.meld'
@@ -22,8 +22,8 @@ set fish_greeting # clear greeting
 
 fish_add_path ~/Backups/scripts
 
-set -x SHELL "$(which fish)"
-set -x EDITOR "$(which lvim)"
+set -x SHELL "(which fish)"
+set -x EDITOR "(which lvim)"
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
 
