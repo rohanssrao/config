@@ -11,12 +11,12 @@ alias cdf='cd (fzfd)'
 
 if [ (uname) = "Linux" ]
 	alias open='xdg-open 2>/dev/null'
-    alias copy='xclip -selection c'
-    alias meld='flatpak run org.gnome.meld'
-    set -x XDG_DATA_HOME "$HOME/.local/share"
-    set -x XDG_CONFIG_HOME "$HOME/.config"
-    set -x XDG_STATE_HOME "$HOME/.local/state"
-    set -x XDG_CACHE_HOME "$HOME/.cache"
+	alias copy='xclip -selection c'
+	alias meld='flatpak run org.gnome.meld'
+	set -x XDG_DATA_HOME "$HOME/.local/share"
+	set -x XDG_CONFIG_HOME "$HOME/.config"
+	set -x XDG_STATE_HOME "$HOME/.local/state"
+	set -x XDG_CACHE_HOME "$HOME/.cache"
 end
 
 fish_add_path ~/Backups/scripts
