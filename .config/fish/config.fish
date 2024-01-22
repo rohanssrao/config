@@ -1,7 +1,9 @@
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias lg='lazygit'
 alias lcfg='lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias open='xdg-open 2>/dev/null'
+if [ (uname) != "Darwin" ]
+    alias open='xdg-open 2>/dev/null'
+end
 alias cp='cp -i'
 alias mv='mv -i'
 alias copy='xclip -selection c'
