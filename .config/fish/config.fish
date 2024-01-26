@@ -1,6 +1,7 @@
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias lg='lazygit'
 alias lcfg='lazygit --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias home='home-manager'
 alias cp='cp -i'
 alias mv='mv -i'
 alias ls='eza -a --icons'
@@ -32,10 +33,3 @@ set -x SHELL (which fish)
 set -x EDITOR (which lvim)
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
-
-####### vi mode ########
-#fish_vi_key_bindings
-#bind -M default yy fish_clipboard_copy
-#bind -M default p fish_clipboard_paste
-######## undo ##########
-#fish_default_key_bindings
