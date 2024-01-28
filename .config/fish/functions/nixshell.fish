@@ -1,7 +1,7 @@
 function nixshell
   if not test -e flake.nix;
 		echo '{
-  inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05"; };
+  inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; };
   outputs = {nixpkgs, ...}: let
     system = "x86_64-linux";
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
