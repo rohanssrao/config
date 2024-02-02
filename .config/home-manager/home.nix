@@ -17,8 +17,11 @@
 		lolcat
 		pv
 		spotdl
+		wgcf
 
 	];
+
+	nixpkgs.config.allowUnfree = true;
 
 	home.username = "chika";
 	home.homeDirectory = "/home/chika";

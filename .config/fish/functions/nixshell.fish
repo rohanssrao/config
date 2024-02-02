@@ -11,7 +11,7 @@ function nixshell
 				
       ];
 			shellHook = ''
-				exec fish
+				exec '$SHELL'
 			'';
     };
   };

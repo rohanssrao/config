@@ -1,5 +1,4 @@
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias home='home-manager'
 alias cp='cp -i'
 alias mv='mv -i'
 alias ls='eza -a --icons'
