@@ -4,3 +4,6 @@
 [submodule ".local/share/fonts/custom/Liga SF Mono Nerd Font"]
 	path = .local/share/fonts/custom/Liga SF Mono Nerd Font
 	url = https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
+[submodule ".mozilla/firefox/default"]
+	path = .mozilla/firefox/default
+	url = https://github.com/rohanssrao/foxium.git
