@@ -208,18 +208,7 @@ function prompt_distro -d "Display the icon of your distro"
 	end
 
 	if set -q icon
-		if test "$fish_key_bindings" = "fish_default_key_bindings"
-			prompt_segment $color_distro_bg $color_distro_str $icon
-		else
-			switch $fish_bind_mode
-				case default
-					prompt_segment $color_distro_bg $color_vi_mode_normal $icon
-				case insert
-					prompt_segment $color_distro_bg $color_vi_mode_insert $icon
-				case visual
-					prompt_segment $color_distro_bg $color_vi_mode_visual $icon
-			end
-		end
+		prompt_segment $color_distro_bg $color_distro_str $icon
 	end
 end
 
