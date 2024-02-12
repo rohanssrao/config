@@ -21,13 +21,12 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 
-lvim.builtin.lualine = vim.tbl_extend('keep', lvim.builtin.lualine, {
-	options = {
-		component_separators = '|',
-		section_separators = { left = '', right = '' },
-	},
-	sections = {
-		lualine_a = { { 'mode', separator = { left = '' }, right_padding = 2 } },
-		lualine_b = { 'filename', 'branch' },
-	},
-})
+lvim.builtin.lualine.options = {
+	component_separators = '|',
+	section_separators = { left = '', right = '' },
+}
+
+lvim.builtin.lualine.sections = {
+	lualine_a = { { 'mode', separator = { left = '' }, right_padding = 2 } },
+	lualine_b = { 'filename', 'branch' },
+}
