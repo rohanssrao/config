@@ -28,7 +28,7 @@
 
 	home.stateVersion = "23.11"; # Don't change
 
-	news.display = "silent";
+	# news.display = "silent";
 
 	programs.home-manager.enable = true;
 

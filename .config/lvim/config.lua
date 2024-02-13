@@ -20,3 +20,5 @@ lvim.builtin.lualine.sections = {
 	lualine_a = { { 'mode' } },
 	lualine_b = { 'filename', 'branch' },
 }
+
+lvim.lsp.installer.setup.automatic_installation = false
