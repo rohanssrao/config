@@ -27,3 +27,4 @@ fish_vi_key_bindings
 bind -M insert \el 'forward-word'   # alt-L to accept next autocomplete word
 bind -M insert \ej 'down-or-search' # alt-J/K history navigation
 bind -M insert \ek 'up-or-search'
+bind -M insert \cr 'history-pager'  # re-bind history shortcut
