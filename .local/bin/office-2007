@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-cmd="flatpak run --command=bottles-cli com.usebottles.bottles run -p \"$1\" -b 'Microsoft Office 2007'"
-
-if [ -z "$2" ]; then
-	eval "$cmd"
-else
-	eval "$cmd -- z:\"$2\""
-fi
