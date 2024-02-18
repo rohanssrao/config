@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ self, config, pkgs, ... }:
 
 {
 
@@ -19,6 +19,10 @@
 		spotdl
 		wgcf
 
+	] ++ [
+
+		#self.packages.x86_64-linux.chikafox
+
 	];
 
 	nixpkgs.config.allowUnfree = true;
@@ -28,7 +32,7 @@
 
 	home.stateVersion = "23.11"; # Don't change
 
-	# news.display = "silent";
+	news.display = "silent";
 
 	programs.home-manager.enable = true;
 

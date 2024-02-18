@@ -1,7 +1,6 @@
 function home --wraps='home-manager'
 	switch $argv[1]
-		case "install"
-		case "remove"
+		case "install" "remove"
 				python3 ~/.config/home-manager/home.py $argv
 		case '*'
 				home-manager $argv
