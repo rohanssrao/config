@@ -19,10 +19,6 @@
 		spotdl
 		wgcf
 
-	] ++ [
-
-		#self.packages.x86_64-linux.chikafox
-
 	];
 
 	nixpkgs.config.allowUnfree = true;
