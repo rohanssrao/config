@@ -1,6 +1,6 @@
-function nixshell
+function shell
   if not test -e flake.nix;
-		echo '{
+    echo '{
   inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; };
   outputs = {nixpkgs, ...}: let
     system = "x86_64-linux";
@@ -8,17 +8,17 @@ function nixshell
   in {
     devShells.x86_64-linux.default = pkgs.mkShell {
       packages = with pkgs; [
-				
+        
       ];
-			shellHook = ''
-				exec '$SHELL'
-			'';
+      shellHook = ''
+        exec '$SHELL'
+      '';
     };
   };
 }' > flake.nix
     echo 'Initialized flake' >&2
     return 0
-	else;
-		nix develop --command $SHELL
-	end
+  else;
+    nix develop --command $SHELL
+  end
 end

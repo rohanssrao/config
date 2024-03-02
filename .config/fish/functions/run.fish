@@ -1,3 +1,3 @@
 function run
-	nix-shell -p $argv[1] --quiet --command "$argv"
+  nix shell nixpkgs#$argv[1] --command "$argv"
 end

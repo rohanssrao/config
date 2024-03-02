@@ -7,8 +7,8 @@ alias cdf='cd (fd -H -t d . ~ | fzf -i)'
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 if [ (uname) = "Linux" ]
-	alias open='xdg-open 2>/dev/null'
-	alias copy='xclip -selection c'
+  alias open='xdg-open 2>/dev/null'
+  alias copy='xclip -selection c'
 end
 
 fish_add_path ~/Backups/scripts

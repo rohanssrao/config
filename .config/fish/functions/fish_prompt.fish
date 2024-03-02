@@ -181,35 +181,35 @@ end
 # ===========================
 
 function prompt_distro -d "Display the icon of your distro"
-	if [ (uname) = "Darwin" ]
-		set icon ""
-	else if [ (uname) = "Linux" ]
-		switch (sed -nr 's/^ID=(.*)/\1/p' /etc/os-release)
-			case fedora
-				set icon ""
-			case nixos
-				set icon ""
-			case ubuntu
-				set icon ""
-			case arch
-				set icon ""
-			case kali
-				set icon ""
-			case debian
-				set icon ""
-			case '*'
-				set icon "󰌽"
-			end
-	end
-	if set -q icon
-		prompt_segment $color_distro_bg $color_distro_str $icon
-	end
+  if [ (uname) = "Darwin" ]
+    set icon ""
+  else if [ (uname) = "Linux" ]
+    switch (sed -nr 's/^ID=(.*)/\1/p' /etc/os-release)
+      case fedora
+        set icon ""
+      case nixos
+        set icon ""
+      case ubuntu
+        set icon ""
+      case arch
+        set icon ""
+      case kali
+        set icon ""
+      case debian
+        set icon ""
+      case '*'
+        set icon "󰌽"
+      end
+  end
+  if set -q icon
+    prompt_segment $color_distro_bg $color_distro_str $icon
+  end
 end
 
 function prompt_container -d "Display an icon if in a container (e.g. toolbox, distrobox)"
-	if test -e /run/.containerenv -o -e /.dockerenv
-		prompt_segment $color_user_bg $color_user_str "⬢ $CONTAINER_ID"
-	end
+  if test -e /run/.containerenv -o -e /.dockerenv
+    prompt_segment $color_user_bg $color_user_str "⬢ $CONTAINER_ID"
+  end
 end
 
 function prompt_virtual_env -d "Display Python or Nix virtual environment"
@@ -406,8 +406,8 @@ end
 
 function fish_prompt
   set -g RETVAL $status
-	prompt_distro
-	prompt_container
+  prompt_distro
+  prompt_container
   prompt_status
   prompt_user
   prompt_dir
