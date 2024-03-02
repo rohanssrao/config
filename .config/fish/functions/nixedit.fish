@@ -6,8 +6,7 @@ function nixedit
 		popd && return 0
 	end
 	echo "Rebuilding NixOS..."
-	if not sudo nixos-rebuild switch --flake "$nix_dir"#default &> /tmp/nixos-switch.log;
-		cat /tmp/nixos-switch.log | grep --color error
+	if not sudo nixos-rebuild switch --flake "$nix_dir"#default
 		popd && return 1
 	end
 	git commit -am (nixos-rebuild list-generations | grep current)
