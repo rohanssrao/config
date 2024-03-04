@@ -1,6 +1,9 @@
 function shell
-  if not test -e flake.nix;
-    echo '{
+  if test -e flake.nix
+    nix develop --command $SHELL
+  else
+    echo \
+'{
   inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; };
   outputs = {nixpkgs, ...}: let
     system = "x86_64-linux";
@@ -10,15 +13,10 @@ function shell
       packages = with pkgs; [
         
       ];
-      shellHook = ''
-        exec '$SHELL'
-      '';
     };
   };
 }' > flake.nix
-    echo 'Initialized flake' >&2
-    return 0
-  else;
-    nix develop --command $SHELL
+    $EDITOR flake.nix
+    nix flake update
   end
 end
