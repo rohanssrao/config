@@ -1,3 +1,3 @@
 function run
-  nix shell nixpkgs#$argv[1] --command "$argv"
+  NIXPKGS_ALLOW_UNFREE=1 nix shell nixpkgs#$argv[1] --impure --command "$argv"
 end
