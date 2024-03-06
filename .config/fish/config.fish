@@ -7,7 +7,7 @@ alias copy='xclip -selection c'
 alias vimf='fd -H -t f . ~ | fzf -i | xargs -ro $EDITOR'
 alias cdf='cd (fd -H -t d . ~ | fzf -i)'
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias run='nix shell nixpkgs#$argv[1] --command '
+alias run='NIXPKGS_ALLOW_UNFREE=1 nix run nixpkgs#$argv[1]'
 alias edit='$EDITOR /etc/nixos/configuration.nix'
 alias rebuild='sudo nixos-rebuild switch --flake /etc/nixos#default \
                && git -C /etc/nixos commit -am (nixos-rebuild list-generations | grep current)'
@@ -22,7 +22,6 @@ set -x SHELL (which fish)
 set -x EDITOR (which lvim)
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
-set -x NIXPKGS_ALLOW_UNFREE 1
 
 fish_vi_key_bindings
 
