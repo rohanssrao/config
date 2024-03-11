@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=firefox -P Chika --name chikafox %U
+Exec=firefox -P Chika %U
 Icon=firefox
 Name=Chikafox
 NoDisplay=false
