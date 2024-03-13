@@ -7,15 +7,6 @@ alias copy='xclip -selection c'
 alias vimf='fd -H -t f . ~ | fzf --preview "bat -n --color=always {}" | xargs -ro $EDITOR'
 alias cdf='cd (fd -H -t d . ~ | fzf --preview "ls --color=always {}")'
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias edit='$EDITOR /etc/nixos/configuration.nix'
-alias update='nix flake update --flake /etc/nixos#default && rebuild'
-
-function run; NIXPKGS_ALLOW_UNFREE=1 nix run nixpkgs#$argv[1]; end
-function rebuild
-  git -C /etc/nixos add -A
-  sudo nixos-rebuild switch --flake /etc/nixos#default; or return
-  git -C /etc/nixos commit -m "rebuild"
-end
 
 fish_add_path ~/Backups/scripts
 
