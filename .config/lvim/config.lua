@@ -14,13 +14,4 @@ vim.opt.timeoutlen = 250
 lvim.keys.normal_mode["<S-l>"] = ":bnext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":bprev<CR>"
 
-lvim.builtin.lualine.options = {
-  section_separators = { left = '', right = '' },
-}
-
-lvim.builtin.lualine.sections = {
-  lualine_a = { { 'mode' } },
-  lualine_b = { 'filename', 'branch' },
-}
-
 lvim.lsp.installer.setup.automatic_installation = false

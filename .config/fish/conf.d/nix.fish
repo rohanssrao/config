@@ -5,7 +5,7 @@ function edit
 end
 
 function update
-  nix flake update --flake /etc/nixos#default && rebuild
+  pushd /etc/nixos; nix flake update && rebuild; popd
 end
 
 function run
@@ -16,11 +16,6 @@ function rebuild
   git -C /etc/nixos add -A
   sudo nixos-rebuild switch --flake /etc/nixos#default; or return
   git -C /etc/nixos commit -m "rebuild"
-end
-
-# nix-ld
-function python3
-  eval LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH (command -v python3) (string escape -- $argv)
 end
 
 function shell
