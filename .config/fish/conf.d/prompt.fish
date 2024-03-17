@@ -15,8 +15,6 @@
 # set -g theme_svn_prompt_enabled yes
 # set -g theme_mercurial_prompt_enabled yes
 
-
-
 set -g current_bg NONE
 set -g segment_separator 
 set -g right_segment_separator 
@@ -33,6 +31,9 @@ set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_versio
 # If not set, default color from agnoster will be used.
 # ===========================
 
+set -q color_vi_mode_normal; or set -g color_vi_mode_normal green
+set -q color_vi_mode_insert; or set -g color_vi_mode_insert blue 
+set -q color_vi_mode_visual; or set -g color_vi_mode_visual red
 set -q color_distro_bg; or set -g color_distro_bg black
 set -q color_distro_str; or set -g color_distro_str blue
 set -q color_virtual_env_bg; or set -g color_virtual_env_bg white
@@ -422,4 +423,17 @@ function fish_prompt
     end
   end
   prompt_finish
+end
+
+function fish_mode_prompt
+  if test "$fish_key_bindings" = "fish_vi_key_bindings"
+    switch $fish_bind_mode
+      case default
+        set color_distro_str $color_vi_mode_normal
+      case insert
+        set color_distro_str $color_vi_mode_insert
+      case visual
+        set color_distro_str $color_vi_mode_visual
+    end
+  end
 end

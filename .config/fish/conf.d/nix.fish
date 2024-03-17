@@ -9,7 +9,7 @@ function update
 end
 
 function run
-  nix shell nixpkgs#$argv[1] -c $argv
+  nix run nixpkgs#$argv[1]
 end
 
 function rebuild
