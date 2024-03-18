@@ -1,5 +1,5 @@
-command -q lvim && alias vim='lvim'
-command -q eza && alias ls='eza -a --icons'
+if command -q lvim; alias vim='lvim'; end
+if command -q eza; alias ls='eza -a --icons'; end
 alias cp='cp -i'
 alias mv='mv -i'
 alias vimf='fd -H -t f . ~ | fzf --preview "bat -n --color=always {}" | xargs -ro $EDITOR'
@@ -13,9 +13,9 @@ fish_add_path ~/Backups/scripts
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
 
-set -x SHELL (which fish)
-set -x EDITOR (which vi)
-command -q lvim && set -x EDITOR (which lvim)
+set -x SHELL (command -v fish)
+set -x EDITOR (command -v vi)
+if command -q lvim; set -x EDITOR (command -v lvim); end
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
 
