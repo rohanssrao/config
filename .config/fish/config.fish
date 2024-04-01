@@ -8,20 +8,20 @@ alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias open='xdg-open 2>/dev/null'
 alias copy='xclip -selection c'
 
-fish_add_path ~/Backups/scripts
-
-set fish_prompt_pwd_dir_length 3
-set fish_greeting
-
 set -x SHELL (command -v fish)
 set -x EDITOR (command -v vi)
 if command -q lvim; set -x EDITOR (command -v lvim); end
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
 
+set fish_prompt_pwd_dir_length 3
+set fish_greeting
+
+fish_add_path ~/Backups/scripts
 fish_vi_key_bindings
 
-bind -M insert \el 'forward-word'   # alt-L to accept next autocomplete word
-bind -M insert \ej 'down-or-search' # alt-J/K history navigation
-bind -M insert \ek 'up-or-search'   # alt-J/K history navigation
-bind -M insert \cr 'history-pager'  # re-bind history shortcut for vi mode
+bind -M insert \el 'forward-word'          # alt-l to accept next autocomplete word
+bind -M insert \ej 'down-or-search'        # alt-j/k history navigation
+bind -M insert \ek 'up-or-search'          # alt-j/k history navigation
+bind -M insert \cr 'history-pager'         # re-bind (vi mode)
+bind -M insert \cf 'accept-autosuggestion' # re-bind (vi mode)

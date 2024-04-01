@@ -1,5 +1,3 @@
-# Helper functions for Nix
-
 function edit
   $EDITOR /etc/nixos/configuration.nix
 end
@@ -8,14 +6,14 @@ function update
   pushd /etc/nixos; nix flake update && rebuild; popd
 end
 
-function run
-  nix run nixpkgs#$argv[1]
-end
-
 function rebuild
   git -C /etc/nixos add -A
   sudo nixos-rebuild switch --flake /etc/nixos#default; or return
   git -C /etc/nixos commit -m "rebuild"
+end
+
+function run
+  nix run nixpkgs#$argv[1] -- $argv[2..-1]
 end
 
 function shell
@@ -39,6 +37,5 @@ in {
 };
 }' > flake.nix
     $EDITOR flake.nix
-    nix flake update
   end
 end
