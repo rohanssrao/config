@@ -3,7 +3,7 @@ function edit
 end
 
 function update
-  pushd /etc/nixos; nix flake update && rebuild; popd
+  pushd /etc/nixos; sudo nix flake update && rebuild; popd
 end
 
 function rebuild
@@ -12,8 +12,19 @@ function rebuild
   git -C /etc/nixos commit -m "rebuild"
 end
 
+function push
+  pushd /etc/nixos
+  git reset --soft origin/main
+  git commit
+  git push
+end
+
 function run
-  nix run nixpkgs#$argv[1] -- $argv[2..-1]
+  if [ $argv[1] = "--unfree" ]
+    NIXPKGS_ALLOW_UNFREE=1 nix run --impure nixpkgs#$argv[2] -- $argv[3..-1]
+  else
+    nix run nixpkgs#$argv[1] -- $argv[2..-1]
+  end
 end
 
 function shell
