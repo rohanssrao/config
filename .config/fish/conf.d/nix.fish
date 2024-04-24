@@ -7,9 +7,14 @@ function update
 end
 
 function rebuild
-  git -C /etc/nixos add -A
+  pushd /etc/nixos
+  git add -A
+  set old_gen (readlink -f /nix/var/nix/profiles/system)
   sudo nixos-rebuild switch --flake /etc/nixos#default; or return
-  git -C /etc/nixos commit -m "rebuild"
+  set new_gen (readlink -f /nix/var/nix/profiles/system)
+  if [ $new_gen != $old_gen ]; and command -q nvd; nvd diff $old_gen $new_gen; end
+  git diff-index --quiet HEAD; or git commit -q -m "rebuild"
+  popd
 end
 
 function push
