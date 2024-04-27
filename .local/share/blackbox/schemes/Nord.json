@@ -1,7 +1,7 @@
 {
   "name": "Nord",
   "comment": "An arctic, north-bluish color palette",
-  "background-color": "#191d24",
+  "background-color": "#111318",
   "foreground-color": "#ffffff",
   "badge-color": "#d8dee9",
   "bold-color": "#d8dee9",
@@ -10,7 +10,7 @@
   "highlight-background-color": "#ffffff",
   "highlight-foreground-color": "#000000",
   "palette": [
-    "#191d24",
+    "#111318",
     "#BF616A",
     "#A3BE8C",
     "#EBCB8B",

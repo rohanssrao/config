@@ -2,17 +2,10 @@ function edit
   $EDITOR /etc/nixos/configuration.nix
 end
 
-function update
-  pushd /etc/nixos; sudo nix flake update && rebuild; popd
-end
-
 function rebuild
   pushd /etc/nixos
-  git add -A
-  set old_gen (readlink -f /nix/var/nix/profiles/system)
-  sudo nixos-rebuild switch --flake /etc/nixos#default; or return
-  set new_gen (readlink -f /nix/var/nix/profiles/system)
-  if [ $new_gen != $old_gen ]; and command -q nvd; nvd diff $old_gen $new_gen; end
+  sudo git add -A
+  run nh os switch . $argv
   git diff-index --quiet HEAD; or git commit -q -m "rebuild"
   popd
 end
