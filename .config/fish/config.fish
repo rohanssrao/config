@@ -5,12 +5,12 @@ alias open='xdg-open 2>/dev/null'
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias cdf='cd (fd -H -t d . ~ | fzf --preview "ls --color=always {}")'
 alias vimf='fd -H -t f . ~ | fzf --preview "bat -n --theme=Nord --color=always {}" | xargs -ro $EDITOR'
-if command -q lvim; alias vim='lvim'; end
+if command -q nvim; alias vim='nvim'; end
 if command -q eza; alias ls='eza -a --icons'; end
 
 set -x SHELL (command -v fish)
 set -x EDITOR (command -v vi)
-if command -q lvim; set -x EDITOR (command -v lvim); end
+if command -q nvim; set -x EDITOR (command -v nvim); end
 set -x SUDO_EDITOR "$EDITOR"
 set -x VISUAL "$EDITOR"
 
