@@ -3,16 +3,16 @@ alias mv='mv -i'
 alias copy='xclip -selection c'
 alias open='xdg-open 2>/dev/null'
 alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias cdf='cd (fd -H -t d . ~ | fzf --preview "ls --color=always {}")'
-alias vimf='fd -H -t f . ~ | fzf --preview "bat -n --theme=Nord --color=always {}" | xargs -ro $EDITOR'
-if command -q nvim; alias vim='nvim'; end
 if command -q eza; alias ls='eza -a --icons'; end
 
-set -x SHELL (command -v fish)
-set -x EDITOR (command -v vi)
-if command -q nvim; set -x EDITOR (command -v nvim); end
-set -x SUDO_EDITOR "$EDITOR"
-set -x VISUAL "$EDITOR"
+function cdf
+  set dir (fd -H -t d . ~ | fzf --preview 'ls --color=always {}')
+  if [ -n "$dir" ]; commandline "cd $dir"; commandline -f execute; end
+end
+function vimf
+  set file (fd -H -t f . ~ | fzf --preview 'bat --color=always {}')
+  if [ -n "$file" ]; commandline "$EDITOR $file"; commandline -f execute; end
+end
 
 set fish_prompt_pwd_dir_length 3
 set fish_greeting
