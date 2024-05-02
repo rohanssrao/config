@@ -6,11 +6,11 @@ alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 if command -q eza; alias ls='eza -a --icons'; end
 
 function cdf
-  set dir (fd -H -t d . ~ | fzf --preview 'ls --color=always {}')
+  set dir (fd -H -t d . ~ | fzf --height=10 --reverse)
   if [ -n "$dir" ]; commandline "cd $dir"; commandline -f execute; end
 end
 function vimf
-  set file (fd -H -t f . ~ | fzf --preview 'bat --color=always {}')
+  set file (fd -H -t f . ~ | fzf --height=10 --reverse)
   if [ -n "$file" ]; commandline "$EDITOR $file"; commandline -f execute; end
 end
 
