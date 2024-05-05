@@ -266,6 +266,9 @@ function prompt_virtual_env -d "Display Python or Nix virtual environment"
     set envs $envs "nix[$IN_NIX_SHELL]"
   end
 
+  # Don't label as nix shell if shell level isn't > 1
+  if [ "$SHLVL" -le 1 ]; set envs; end
+
   if test "$envs"
     prompt_segment $color_virtual_env_bg $color_virtual_env_str (string join " " $envs)
   end
