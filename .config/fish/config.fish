@@ -1,8 +1,8 @@
 alias cp='cp -i'
 alias mv='mv -i'
-alias copy='xclip -selection c'
+alias copy='xclip -sel c'
 alias open='xdg-open 2>/dev/null'
-alias cfg='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias cfg='git --git-dir=$HOME/.cfg --work-tree=$HOME'
 if command -q eza; alias ls='eza -a --icons'; end
 
 function cdf

@@ -2,10 +2,10 @@ function edit
   $EDITOR /etc/nixos/configuration.nix
 end
 
-function rebuild
+function os
   pushd /etc/nixos
   sudo git add -A
-  run nh os switch . $argv
+  run nh os $argv[1] . $argv[2..-1]
   git diff-index --quiet HEAD; or git commit -q -m "rebuild"
   popd
 end
