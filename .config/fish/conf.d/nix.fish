@@ -9,6 +9,10 @@ function os
   git -C /etc/nixos diff-index --quiet HEAD; or git -C /etc/nixos commit -q -m "rebuild"
 end
 
+function rebuild
+  os switch $argv
+end
+
 function push
   pushd /etc/nixos
   git reset --soft origin/main
