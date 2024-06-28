@@ -29,6 +29,7 @@ end)
 config.keys = {
   { mods = 'ALT', key = 't', action = wezterm.action.SpawnTab 'CurrentPaneDomain', },
   { mods = 'ALT', key = 'w', action = wezterm.action.CloseCurrentTab { confirm = false }, },
+  { mods = 'ALT', key = 'q', action = wezterm.action.QuitApplication, },
 }
 
 -- Alt+1-9 tab switch

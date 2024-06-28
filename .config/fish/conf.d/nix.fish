@@ -16,6 +16,7 @@ end
 function push
   pushd /etc/nixos
   git reset --soft origin/main
+  git diff --staged
   git commit
   git push
 end
