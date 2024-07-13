@@ -1,0 +1,13 @@
+[Unit]
+Description=ProtonVPN autostart
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/bin/sh -c "until systemctl is-active network-online.target; do sleep 1; done"
+ExecStart=/bin/sh -c "nmcli con up id ProtonVPN"
+TimeoutStartSec=30
+ExecStop=/bin/sh -c "nmcli con down id ProtonVPN"
+
+[Install]
+WantedBy=default.target

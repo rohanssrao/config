@@ -3,7 +3,7 @@ function edit
 end
 
 function os
-  sudo true
+  sudo -v
   run nh os $argv[1] /etc/nixos $argv[2..-1]; or return
   git -C /etc/nixos add -A; or return
   git -C /etc/nixos diff-index --quiet HEAD; or git -C /etc/nixos commit -q -m "rebuild"
@@ -29,9 +29,17 @@ function run
   end
 end
 
+function ,
+  nix shell nixpkgs#(run nix-search-cli -p $argv[1] | head -1 | awk '{print $1;}') --command $argv
+end
+
 function shell
   if set -q argv[1]
-    nix shell nixpkgs#{$argv}
+    if [ $argv[1] = "--unfree" ]
+      NIXPKGS_ALLOW_UNFREE=1 nix shell --impure nixpkgs#$argv[2..-1]
+    else
+      nix shell nixpkgs#{$argv}
+    end
   else if test -e flake.nix
     nix develop --command $SHELL
   else
