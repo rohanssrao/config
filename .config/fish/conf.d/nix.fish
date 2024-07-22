@@ -30,7 +30,9 @@ function run
 end
 
 function ,
-  nix shell nixpkgs#(run nix-search-cli -p $argv[1] | head -1 | awk '{print $1;}') --command $argv
+  set package (run nix-search-cli -p $argv[1] | head -1 | awk '{print $1;}')
+  echo "[Using package $package]"
+  nix shell nixpkgs#$package --command $argv
 end
 
 function shell
