@@ -31,7 +31,7 @@ end
 
 function ,
   set package (run nix-search-cli -p $argv[1] | head -1 | awk '{print $1;}')
-  echo "[Using package $package]"
+  echo "[Using package $package]" >&2
   nix shell nixpkgs#$package --command $argv
 end
 
