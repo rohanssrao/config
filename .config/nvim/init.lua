@@ -28,7 +28,16 @@ require("lazy").setup({
       update_notifications = true, -- Enable/disable notification about running `:Lazy update` twice to update pinned plugins
     },
   },
-  { import = "plugins" },
+  {
+    "AstroNvim/astrocore",
+    opts = function(_, opts)
+      opts.options.opt.relativenumber = false
+      return opts
+    end
+  },
+  { "goolord/alpha-nvim", enabled = false },
+  { "akinsho/toggleterm.nvim", lazy = false, opts = { open_mapping = [[<c-\>]] } },
+
 } --[[@as LazySpec]], {
   -- Configure any other `lazy.nvim` configuration options here
   install = { colorscheme = { "astrodark", "habamax" } },

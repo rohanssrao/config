@@ -62,3 +62,7 @@ in {
     $EDITOR flake.nix
   end
 end
+
+function search
+  run nix-search-cli $argv
+end
