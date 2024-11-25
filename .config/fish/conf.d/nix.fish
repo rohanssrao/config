@@ -1,5 +1,5 @@
 function edit
-  $EDITOR /etc/nixos/configuration.nix
+  $EDITOR /etc/nixos/flake.nix
 end
 
 function os

@@ -4,6 +4,7 @@ alias copy='xclip -sel c'
 alias open='xdg-open 2>/dev/null'
 alias cfg='git --git-dir=$HOME/.cfg --work-tree=$HOME'
 if command -q eza; alias ls='eza -a --icons'; end
+function cd; builtin cd $argv && ls; end
 
 function cdf
   set dir (fd -H -t d . ~ | fzf --height=10 --reverse)
