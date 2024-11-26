@@ -1,34 +1,16 @@
-# name: Agnoster
-# agnoster's Theme - https://gist.github.com/3712874
-# A Powerline-inspired theme for FISH
-#
-# # README
-#
-# In order for this theme to render correctly, you will need a
-# [Powerline-patched font](https://gist.github.com/1595572).
+set -g fish_prompt_pwd_dir_length 3
+set -g segment_separator 
+set -q max_package_count_visible_in_prompt; or set -g max_package_count_visible_in_prompt 3
+set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_version yes
 
-## Set this options in your config.fish (if you want to :])
+## Optional
 # set -g theme_display_user yes
 # set -g theme_hide_hostname yes
 # set -g theme_hide_hostname no
 # set -g default_user your_normal_user
-# set -g theme_svn_prompt_enabled yes
-# set -g theme_mercurial_prompt_enabled yes
-
-set -g current_bg NONE
-set -g segment_separator 
-set -g right_segment_separator 
-set -q scm_prompt_blacklist; or set -g scm_prompt_blacklist
-set -q max_package_count_visible_in_prompt; or set -g max_package_count_visible_in_prompt 3
-# We support trimming the version only in simple cases, such as "1.2.3".
-set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_version yes
 
 # ===========================
 # Color setting
-
-# You can set these variables in config.fish like:
-# set -g color_dir_bg red
-# If not set, default color from agnoster will be used.
 # ===========================
 
 set -q color_vi_mode_normal; or set -g color_vi_mode_normal green
@@ -42,16 +24,10 @@ set -q color_user_bg; or set -g color_user_bg brblack # black
 set -q color_user_str; or set -g color_user_str yellow
 set -q color_dir_bg; or set -g color_dir_bg blue
 set -q color_dir_str; or set -g color_dir_str black
-set -q color_hg_changed_bg; or set -g color_hg_changed_bg yellow
-set -q color_hg_changed_str; or set -g color_hg_changed_str black
-set -q color_hg_bg; or set -g color_hg_bg green
-set -q color_hg_str; or set -g color_hg_str black
 set -q color_git_dirty_bg; or set -g color_git_dirty_bg yellow
 set -q color_git_dirty_str; or set -g color_git_dirty_str black
 set -q color_git_bg; or set -g color_git_bg green
 set -q color_git_str; or set -g color_git_str black
-set -q color_svn_bg; or set -g color_svn_bg green
-set -q color_svn_str; or set -g color_svn_str black
 set -q color_status_nonzero_bg; or set -g color_status_nonzero_bg brblack # black
 set -q color_status_nonzero_str; or set -g color_status_nonzero_str red
 set -q glyph_status_nonzero; or set -g glyph_status_nonzero "✘"
@@ -75,16 +51,6 @@ set -q fish_vcs_branch_name_length; or set -g fish_vcs_branch_name_length 15
 # set -g color_dir_bg red
 
 set -q fish_git_prompt_untracked_files; or set -g fish_git_prompt_untracked_files normal
-
-# ===========================
-# Subversion settings
-
-set -q theme_svn_prompt_enabled; or set -g theme_svn_prompt_enabled no
-
-# ===========================
-# Mercurial settings
-
-set -q theme_mercurial_prompt_enabled; or set -g theme_mercurial_prompt_enabled no
 
 # ===========================
 # Helper methods
@@ -123,12 +89,6 @@ function parse_git_dirty
     else
         echo -n "$__fish_git_prompt_char_cleanstate"
     end
-  end
-end
-
-function cwd_in_scm_blacklist
-  for entry in $scm_prompt_blacklist
-    pwd | grep "^$entry" -
   end
 end
 
@@ -181,7 +141,7 @@ end
 # Theme components
 # ===========================
 
-function prompt_distro -d "Display the icon of your distro"
+function prompt_distro -d "Display distro icon"
   if [ (uname) = "Darwin" ]
     set icon ""
   else if [ (uname) = "Linux" ]
@@ -207,7 +167,7 @@ function prompt_distro -d "Display the icon of your distro"
   end
 end
 
-function prompt_container -d "Display an icon if in a container (e.g. toolbox, distrobox)"
+function prompt_container -d "Display container name"
   if test -e /run/.containerenv -o -e /.dockerenv
     prompt_segment $color_user_bg $color_user_str "⬢ $CONTAINER_ID"
   end
@@ -306,32 +266,6 @@ function prompt_dir -d "Display the current directory"
 end
 
 
-function prompt_hg -d "Display mercurial state"
-  not set -l root (fish_print_hg_root); and return
-
-  set -l state
-  set -l branch (cat $root/branch 2>/dev/null; or echo default)
-  set -l bookmark (cat $root/bookmarks.current 2>/dev/null)
-  set state (hg_get_state)
-  set revision (command hg id -n)
-  set branch_symbol \uE0A0
-  set prompt_text "$branch_symbol $branch$bookmark:$revision"
-  if [ "$state" = "0" ]
-      prompt_segment $color_hg_changed_bg $color_hg_changed_str $prompt_text " ±"
-  else
-      prompt_segment $color_hg_bg $color_hg_str $prompt_text
-  end
-end
-
-function hg_get_state -d "Get mercurial working directory state"
-  if hg status | grep --quiet -e "^[A|M|R|!|?]"
-    echo 0
-  else
-    echo 1
-  end
-end
-
-
 function prompt_git -d "Display the current git state"
   set -l ref
   set -l dirty
@@ -352,36 +286,6 @@ function prompt_git -d "Display the current git state"
     end
   end
 end
-
-
-function prompt_svn -d "Display the current svn state"
-  set -l ref
-  if command svn info >/dev/null 2>&1
-    set long_branch (svn_get_branch)
-    set -l branch (shorten_branch_name $long_branch)
-    set branch_symbol \uE0A0
-    set revision (svn_get_revision)
-    prompt_segment $color_svn_bg $color_svn_str "$branch_symbol $branch:$revision"
-  end
-end
-
-function svn_get_branch -d "get the current branch name"
-  svn info 2> /dev/null | awk -F/ \
-      '/^URL:/ { \
-        for (i=0; i<=NF; i++) { \
-          if ($i == "branches" || $i == "tags" ) { \
-            print $(i+1); \
-            break;\
-          }; \
-          if ($i == "trunk") { print $i; break; } \
-        } \
-      }'
-end
-
-function svn_get_revision -d "get the current revision number"
-  svn info 2> /dev/null | sed -n 's/Revision:\ //p'
-end
-
 
 function prompt_status -d "the symbols for a non zero exit status, root and background jobs"
     if [ $RETVAL -ne 0 ]
@@ -409,6 +313,7 @@ end
 # ===========================
 
 function fish_prompt
+  set -g current_bg NONE
   set -g RETVAL $status
   prompt_distro
   prompt_container
@@ -416,15 +321,7 @@ function fish_prompt
   prompt_user
   prompt_dir
   prompt_virtual_env
-  if [ (cwd_in_scm_blacklist | wc -c) -eq 0 ]
-    type -q git; and prompt_git
-    if [ "$theme_mercurial_prompt_enabled" = "yes" ]
-      prompt_hg
-    end
-    if [ "$theme_svn_prompt_enabled" = "yes" ]
-      prompt_svn
-    end
-  end
+  type -q git; and prompt_git
   prompt_finish
 end
 

@@ -15,14 +15,17 @@ function vimf
   if [ -n "$file" ]; commandline "$EDITOR $file"; commandline -f execute; end
 end
 
-set fish_prompt_pwd_dir_length 3
+# trim kitty packages from nix prompt
+if test (basename (readlink /proc/(ps -o ppid= -p $fish_pid | awk '{$1=$1};1')/exe)) = ".kitty-wrapped"
+  set PATH (for dir in $PATH; if not string match -q "/nix/store/*" $dir; echo $dir; end; end)
+end
+
 set fish_greeting
 
 fish_add_path ~/Backups/scripts
 
-fish_vi_key_bindings
-
 # \e = alt, \c = ctrl
+set -g fish_vi_key_bindings
 bind -M insert \el 'forward-word'
 bind -M insert \ej 'down-or-search'
 bind -M insert \ek 'up-or-search'
