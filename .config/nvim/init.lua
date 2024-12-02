@@ -12,7 +12,6 @@ end
 require("lazy").setup({
   { "AstroNvim/AstroNvim", import = "astronvim.plugins" },
   { "goolord/alpha-nvim", enabled = false },
-  { "akinsho/toggleterm.nvim", lazy = false, opts = { open_mapping = [[<c-\>]] } },
   { "AstroNvim/astrocore",
     opts = function(_, opts)
       opts.options.opt.relativenumber = false
@@ -23,4 +22,6 @@ require("lazy").setup({
       return opts
     end
   },
+  { "akinsho/toggleterm.nvim", lazy = false, opts = { open_mapping = [[<c-\>]] } },
+  { "HiPhish/rainbow-delimiters.nvim" },
 })
