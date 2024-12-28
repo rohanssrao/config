@@ -6,21 +6,21 @@ set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_versio
 ## Optional
 # set -g theme_display_user yes
 # set -g theme_hide_hostname yes
-# set -g theme_hide_hostname no
 # set -g default_user your_normal_user
 
 # ===========================
 # Color setting
 # ===========================
 
+set -g term_bg (sh -c 'read -t 0.1 -rs -d \\\\ -p $\'\\e]11;?\\e\\\\\'; echo $REPLY' | od -An -tc | tr -d ' \n' | awk -F':|/' '{if (length($0)<30) print "#111318"; else print "#" substr($2,1,2) substr($3,1,2) substr($4,1,2)}')
 set -q color_vi_mode_normal; or set -g color_vi_mode_normal green
 set -q color_vi_mode_insert; or set -g color_vi_mode_insert blue 
 set -q color_vi_mode_visual; or set -g color_vi_mode_visual red
-set -q color_distro_bg; or set -g color_distro_bg black
+set -q color_distro_bg; or set -g color_distro_bg $term_bg
 set -q color_distro_str; or set -g color_distro_str blue
 set -q color_virtual_env_bg; or set -g color_virtual_env_bg white
 set -q color_virtual_env_str; or set -g color_virtual_env_str black
-set -q color_user_bg; or set -g color_user_bg brblack # black
+set -q color_user_bg; or set -g color_user_bg brblack
 set -q color_user_str; or set -g color_user_str yellow
 set -q color_dir_bg; or set -g color_dir_bg blue
 set -q color_dir_str; or set -g color_dir_str black
@@ -28,16 +28,16 @@ set -q color_git_dirty_bg; or set -g color_git_dirty_bg yellow
 set -q color_git_dirty_str; or set -g color_git_dirty_str black
 set -q color_git_bg; or set -g color_git_bg green
 set -q color_git_str; or set -g color_git_str black
-set -q color_status_nonzero_bg; or set -g color_status_nonzero_bg brblack # black
+set -q color_status_nonzero_bg; or set -g color_status_nonzero_bg brblack
 set -q color_status_nonzero_str; or set -g color_status_nonzero_str red
 set -q glyph_status_nonzero; or set -g glyph_status_nonzero "✘"
-set -q color_status_superuser_bg; or set -g color_status_superuser_bg brblack # black
+set -q color_status_superuser_bg; or set -g color_status_superuser_bg brblack
 set -q color_status_superuser_str; or set -g color_status_superuser_str yellow
 set -q glyph_status_superuser; or set -g glyph_status_superuser "🔒"
-set -q color_status_jobs_bg; or set -g color_status_jobs_bg brblack # black
+set -q color_status_jobs_bg; or set -g color_status_jobs_bg brblack
 set -q color_status_jobs_str; or set -g color_status_jobs_str cyan
 set -q glyph_status_jobs; or set -g glyph_status_jobs "⚡"
-set -q color_status_private_bg; or set -g color_status_private_bg brblack # black
+set -q color_status_private_bg; or set -g color_status_private_bg brblack
 set -q color_status_private_str; or set -g color_status_private_str purple
 set -q glyph_status_private; or set -g glyph_status_private "⚙"
 
@@ -265,7 +265,6 @@ function prompt_dir -d "Display the current directory"
   prompt_segment $color_dir_bg $color_dir_str (prompt_pwd)
 end
 
-
 function prompt_git -d "Display the current git state"
   set -l ref
   set -l dirty
@@ -273,7 +272,7 @@ function prompt_git -d "Display the current git state"
     set dirty (parse_git_dirty)
     set ref (command git symbolic-ref HEAD 2> /dev/null)
     if [ $status -gt 0 ]
-      set -l branch (command git show-ref --head -s --abbrev |head -n1 2> /dev/null)
+      set -l branch (command git show-ref --head -s --abbrev | head -n1 2> /dev/null)
       set ref "➦ $branch "
     end
     set branch_symbol \uE0A0
@@ -296,13 +295,10 @@ function prompt_status -d "the symbols for a non zero exit status, root and back
       prompt_segment $color_status_private_bg $color_status_private_str $glyph_status_private
     end
 
-    # if superuser (uid == 0)
-    set -l uid (id -u $USER)
-    if [ $uid -eq 0 ]
+    if [ (id -u $USER) -eq 0 ]
       prompt_segment $color_status_superuser_bg $color_status_superuser_str $glyph_status_superuser
     end
 
-    # Jobs display
     if [ (jobs -l | wc -l) -gt 0 ]
       prompt_segment $color_status_jobs_bg $color_status_jobs_str $glyph_status_jobs
     end

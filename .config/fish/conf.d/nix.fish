@@ -3,14 +3,14 @@ function edit
 end
 
 function os
-  sudo -v
-  run nh os $argv[1] /etc/nixos $argv[2..-1]; or return
-  git -C /etc/nixos add -A; or return
-  git -C /etc/nixos diff-index --quiet HEAD; or git -C /etc/nixos commit -q -m "rebuild"
+  run nh os $argv[1] /etc/nixos $argv[2..-1]
 end
 
 function rebuild
-  os switch $argv
+  sudo -v
+  run nh os switch /etc/nixos $argv[2..-1]; or return
+  git -C /etc/nixos add -A; or return
+  git -C /etc/nixos diff-index --quiet HEAD; or git -C /etc/nixos commit -q -m "rebuild"
 end
 
 function push

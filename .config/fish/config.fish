@@ -15,8 +15,8 @@ function vimf
   if [ -n "$file" ]; commandline "$EDITOR \"$file\""; commandline -f execute; end
 end
 
-# trim kitty packages from nix shell prompt
-if test (basename (readlink /proc/(ps -o ppid= -p $fish_pid | awk '{$1=$1};1')/exe)) = ".kitty-wrapped"
+# trim nix store paths
+if test $SHLVL = 1
   set PATH (for dir in $PATH; if not string match -q "/nix/store/*" $dir; echo $dir; end; end)
 end
 
