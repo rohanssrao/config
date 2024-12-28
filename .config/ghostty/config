@@ -1,0 +1,31 @@
+font-size=12.5
+
+window-decoration = false
+window-theme = ghostty
+window-height = 40
+window-width = 140
+window-padding-x = 5
+window-padding-y = 5
+
+palette = 0=#111318
+palette = 1=#BF616A
+palette = 2=#A3BE8C
+palette = 3=#EBCB8B
+palette = 4=#81A1C1
+palette = 5=#B48EAD
+palette = 6=#88C0D0
+palette = 7=#E5E9F0
+palette = 8=#3B4252
+palette = 9=#BF616A
+palette = 10=#A3BE8C
+palette = 11=#EBCB8B
+palette = 12=#81A1C1
+palette = 13=#B48EAD
+palette = 14=#8FBCBB
+palette = 15=#ECEFF4
+background = #111318
+foreground = #ffffff
+
+keybind = alt+t=new_tab
+keybind = alt+w=close_surface
+keybind = alt+q=quit
