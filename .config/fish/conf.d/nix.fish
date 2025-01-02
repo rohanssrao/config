@@ -1,32 +1,25 @@
-function edit
-  $EDITOR /etc/nixos/flake.nix
-end
+set sys_flake "/etc/nixos"
 
-function os
-  run nh os $argv[1] /etc/nixos $argv[2..-1]
+function edit
+  $EDITOR $sys_flake/flake.nix
 end
 
 function rebuild
   sudo -v
-  run nh os switch /etc/nixos $argv[2..-1]; or return
-  git -C /etc/nixos add -A; or return
-  git -C /etc/nixos diff-index --quiet HEAD; or git -C /etc/nixos commit -q -m "rebuild"
+  nix run nixpkgs#nh -- os switch $sys_flake $argv[1..-1]; or return
+  git -C $sys_flake add -A; or return
+  git -C $sys_flake diff-index --quiet HEAD; or git -C $sys_flake commit -q -m "rebuild"
 end
 
 function push
-  pushd /etc/nixos
+  pushd $sys_flake
   git reset --soft origin/main
   git diff --staged
-  git commit
-  git push
+  git commit && git push
 end
 
 function run
-  if [ $argv[1] = "--unfree" ]
-    NIXPKGS_ALLOW_UNFREE=1 nix run --impure nixpkgs#$argv[2] -- $argv[3..-1]
-  else
-    nix run nixpkgs#$argv[1] -- $argv[2..-1]
-  end
+  nix run nixpkgs#$argv[1] -- $argv[2..-1]
 end
 
 function ,
@@ -41,27 +34,23 @@ end
 
 function shell
   if set -q argv[1]
-    if [ $argv[1] = "--unfree" ]
-      NIXPKGS_ALLOW_UNFREE=1 nix shell --impure nixpkgs#$argv[2..-1]
-    else
-      nix shell nixpkgs#{$argv}
-    end
+    nix shell nixpkgs#{$argv}
   else if test -e flake.nix
     nix develop --command $SHELL
   else
     echo \
 '{
-inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; };
-outputs = {nixpkgs, ...}: let
-  system = "x86_64-linux";
-  pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-in {
-  devShells.x86_64-linux.default = pkgs.mkShell {
-    packages = with pkgs; [
-      
-    ];
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  outputs = { nixpkgs, ... }: let
+    system = "'(nix eval --impure --raw --expr 'builtins.currentSystem')'";
+    pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+  in {
+    devShells.x86_64-linux.default = pkgs.mkShell {
+      packages = with pkgs; [
+        
+      ];
+    };
   };
-};
 }' > flake.nix
     $EDITOR flake.nix
   end
