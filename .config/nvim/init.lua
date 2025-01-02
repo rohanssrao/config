@@ -19,6 +19,13 @@ require("lazy").setup({
       opts.mappings.n.L = { function() require("astrocore.buffer").nav(vim.v.count1) end }
       opts.mappings.v["<"] = { "<gv" }
       opts.mappings.v[">"] = { ">gv" }
+      opts.autocmds.wrapMarkdown = {
+        {
+          event = { "BufEnter" },
+          pattern = { "*.md" },
+          callback = function() vim.opt_local.wrap = true end,
+        }
+      }
       return opts
     end
   },
