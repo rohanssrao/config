@@ -1,0 +1,33 @@
+#!/usr/bin/env nix
+#! nix shell nixpkgs#pv nixpkgs#age --command bash
+
+set -e
+
+exclusions=(
+  --exclude="$HOME/Downloads"
+  --exclude="$HOME/Games"
+  --exclude="$HOME/.cache"
+  --exclude="$HOME/.local/share/Steam"
+  --exclude="$HOME/.local/share/lutris"
+  --exclude="$HOME/.local/share/Trash"
+  --exclude="$HOME/Backups/phone"
+  --exclude="$HOME/Music/phone"
+)
+
+filename="backup-$(date +%Y%m%d).tar.zstd.age"
+
+echo "Backing up to ~/Downloads/$filename..."
+
+tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null \
+  | pv -s $(du -sb "$HOME" "${exclusions[@]}" | awk '{print $1}') \
+  | age -p -o ~/Downloads/"$filename"
+
+phone=$(echo /run/user/$(id -u)/gvfs/mtp*/Internal\ shared\ storage/Documents)
+
+echo "Copying to phone..."
+
+pv ~/Downloads/"$filename" > "$phone"/"$filename"
+
+find "$phone" -type f -name "backup*" -not -name "$filename" -exec rm {} \;
+
+rm ~/Downloads/"$filename"

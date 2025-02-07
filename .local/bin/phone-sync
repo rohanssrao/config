@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+phone=$(echo /run/user/$(id -u)/gvfs/mtp*/Internal\ shared\ storage/)
+
+echo "Syncing downloads (phone -> computer)..."
+rsync -avz \
+  --delete-excluded --info=progress2 --omit-dir-times --no-perms --inplace \
+  "$phone/Download/" ~/Backups/phone/downloads
+
+echo "Syncing photos (phone -> computer)..."
+rsync -avz \
+  --delete-excluded --info=progress2 --omit-dir-times --no-perms --inplace \
+  "$phone/DCIM/Camera/" ~/Backups/phone/photos
+
+echo "Syncing music (computer -> phone)..."
+rsync -avz \
+  --delete-excluded --info=progress2 --omit-dir-times --no-perms --inplace \
+  --exclude ".venv" \
+  ~/Music/phone/ "$phone/Music/"

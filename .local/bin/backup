@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+src="/home/chika/"
+dest="/run/media/chika/rohan-backup/"
+
+echo "Saving NixOS configuration..."
+rsync -a /etc/nixos/* ~/Backups/nixos/
+
+if ! mountpoint -q "$dest"; then echo "Backup destination $dest not found" && exit 1; fi
+
+echo "Beginning /home backup..."
+
+sudo systemd-inhibit rsync \
+  --archive \
+  --delete-excluded \
+  --info=progress2 \
+  --verbose \
+  --exclude "/Downloads" \
+  --exclude "/Games" \
+  --exclude "/.cache" \
+  --exclude "/.local/share/Steam" \
+  --exclude "/.local/share/lutris" \
+  --exclude "/.local/share/Trash" \
+  "$src" "$dest"

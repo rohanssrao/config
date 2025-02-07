@@ -20,7 +20,7 @@ if test $SHLVL = 1
   set PATH (for dir in $PATH; if not string match -q "/nix/store/*" $dir; echo $dir; end; end)
 end
 
-fish_add_path ~/Backups/scripts
+fish_add_path ~/.local/bin
 
 set fish_greeting
 
