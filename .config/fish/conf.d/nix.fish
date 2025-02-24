@@ -23,7 +23,7 @@ function run
 end
 
 function ,
-  set package (run nix-search-cli -p $argv[1] | awk 'NR==1{print $1;}')
+  set package (nix run nixpkgs#nix-search-cli -- -p $argv[1] | awk 'NR==1{print $1;}')
   echo "[Using package $package]" >&2
   nix shell nixpkgs#$package --command $argv
 end

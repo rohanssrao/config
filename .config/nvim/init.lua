@@ -15,6 +15,7 @@ require("lazy").setup({
   { "AstroNvim/astrocore",
     opts = function(_, opts)
       opts.options.opt.relativenumber = false
+      opts.options.opt.wrap = true
       opts.mappings.n.H = { function() require("astrocore.buffer").nav(-vim.v.count1) end }
       opts.mappings.n.L = { function() require("astrocore.buffer").nav(vim.v.count1) end }
       opts.mappings.v["<"] = { "<gv" }

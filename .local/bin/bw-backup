@@ -3,6 +3,21 @@
 
 set -e -o pipefail
 
+
+read -s -p "Bitwarden master password: " password; echo
+
 export NODE_OPTIONS="--no-deprecation"
-export BW_SESSION=$(bw login --check &>/dev/null && bw --raw unlock || bw --raw login rohanssrao@gmail.com)
-bw --raw export --format json | age --passphrase -o ~/Backups/firefox/bitwarden_$(date +%F).json.age
+
+if bw login --check &>/dev/null; then
+    export BW_SESSION=$(bw --raw unlock "$password")
+else
+    export BW_SESSION=$(bw --raw login rohanssrao@gmail.com "$password")
+fi
+
+[ -z "$BW_SESSION" ] && exit 1
+
+filename=$HOME/Backups/firefox/extensions/bitwarden_$(date +%F).json.gpg
+
+bw --raw export --format json | gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$filename"
+
+echo "Written to $filename"

@@ -7,11 +7,11 @@ if command -q eza; alias ls='eza -a --icons'; end
 
 function cd; builtin cd $argv && ls; end
 function cdf
-  set dir (fd -H -t d . ~ | fzf --height=10 --reverse)
+  set dir (FZF_DEFAULT_COMMAND='fd -H -t d . ~' fzf --height=10 --reverse)
   if [ -n "$dir" ]; commandline "cd \"$dir\""; commandline -f execute; end
 end
 function vimf
-  set file (fd -H -t f . ~ | fzf --height=10 --reverse)
+  set file (FZF_DEFAULT_COMMAND='fd -H -t f . ~' fzf --height=10 --reverse)
   if [ -n "$file" ]; commandline "$EDITOR \"$file\""; commandline -f execute; end
 end
 

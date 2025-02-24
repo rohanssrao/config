@@ -44,5 +44,3 @@ for title, group in itertools.groupby(tracks, key=lambda t: f'{t['albumartist']}
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy(t['filename'], dest)
         print(f'  {dest}')
-
-# vim: set syntax=python:
