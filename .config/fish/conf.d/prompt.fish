@@ -12,7 +12,13 @@ set -q try_to_trim_nix_package_version; or set -g try_to_trim_nix_package_versio
 # Color setting
 # ===========================
 
-set -g term_bg (sh -c 'read -t 0.1 -rs -d \\\\ -p $\'\\e]11;?\\e\\\\\'; echo $REPLY' | od -An -tc | tr -d ' \n' | awk -F':|/' '{if (length($0)<30) print "#111318"; else print "#" substr($2,1,2) substr($3,1,2) substr($4,1,2)}')
+# Set prompt background to be the same as the terminal. This is bugged on
+# VTE terminals so check for VTE_VERSION.
+if not set -q VTE_VERSION
+  set -g term_bg (sh -c 'read -t 0.1 -rs -d \\\\ -p $\'\\e]11;?\\e\\\\\'; echo $REPLY' | od -An -tc | tr -d ' \n' | awk -F':|/' '{if (length($0)<30) print "#111318"; else print "#" substr($2,1,2) substr($3,1,2) substr($4,1,2)}')
+else
+  set -g term_bg "#111318"
+end
 set -q color_vi_mode_normal; or set -g color_vi_mode_normal green
 set -q color_vi_mode_insert; or set -g color_vi_mode_insert blue 
 set -q color_vi_mode_visual; or set -g color_vi_mode_visual red
