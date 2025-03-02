@@ -1,0 +1,83 @@
+#!/usr/bin/env nix
+#! nix shell nixpkgs#bitwarden-cli nixpkgs#pv --command bash
+
+set -e -o pipefail
+
+# ----------------
+# bitwarden backup
+# ----------------
+
+read -s -p "Bitwarden master password: " password; echo
+
+if bw login --check &>/dev/null; then
+    export BW_SESSION=$(bw --raw unlock "$password")
+else
+    export BW_SESSION=$(bw --raw login rohanssrao@gmail.com "$password")
+fi
+[ -z "$BW_SESSION" ] && exit 1
+
+outfile="$HOME/Backups/firefox/extensions/bitwarden_$(date +%F).json.gpg"
+
+bw --raw export --format json \
+  | gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$outfile"
+
+cp "$outfile" "$HOME/Backups/phone/documents/Backups/"
+
+echo "Bitwarden backup saved."
+
+# ---------------
+# backup to phone
+# ---------------
+
+exclusions=(
+  --exclude="$HOME/Downloads"
+  --exclude="$HOME/Games"
+  --exclude="$HOME/.cache"
+  --exclude="$HOME/.local/share/Steam"
+  --exclude="$HOME/.local/share/lutris"
+  --exclude="$HOME/.local/share/containers"
+  --exclude="$HOME/.local/share/Trash"
+  --exclude="$HOME/Backups/phone"
+  --exclude="$HOME/Music/phone"
+)
+
+outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd.age"
+echo "Creating backup at $outfile..."
+
+tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null \
+  | pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" \
+  | gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
+
+echo "Sending to phone..."
+
+/run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=7aa1dceaaaaa7d76 --share-file="$outfile"
+
+# ---------------
+# backup to drive
+# ---------------
+
+src="/home/chika/"
+dest="/run/media/chika/rohan-backup/"
+
+echo "Saving NixOS configuration..."
+rsync -a /etc/nixos/* ~/Backups/nixos/
+
+if ! mountpoint -q "$dest"; then echo "Backup destination $dest not found" && exit 1; fi
+
+echo "Beginning /home backup..."
+
+sudo rsync \
+  --archive \
+  --delete-excluded \
+  --info=progress2 \
+  --verbose \
+  --exclude "/Downloads" \
+  --exclude "/Games" \
+  --exclude "/.cache" \
+  --exclude "/.local/share/Steam" \
+  --exclude "/.local/share/lutris" \
+  --exclude "/.local/share/Trash" \
+  --exclude="/.local/share/containers" \
+  "$src" "$dest"
+
+# vim: set syntax=bash:
