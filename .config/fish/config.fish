@@ -24,7 +24,7 @@ fish_add_path ~/.local/bin
 
 set fish_greeting
 
-set -g fish_vi_key_bindings
+fish_vi_key_bindings
 bind -M insert alt-l 'forward-word'
 bind -M insert alt-j 'down-or-search'
 bind -M insert alt-k 'up-or-search'

@@ -16,12 +16,19 @@ else
 fi
 [ -z "$BW_SESSION" ] && exit 1
 
-outfile="$HOME/Backups/firefox/extensions/bitwarden_$(date +%F).json.gpg"
+# Create Bitwarden backup with date-stamped filename
+bw_backup_dir="$HOME/Backups/firefox/extensions"
+bw_phone_dir="$HOME/Backups/phone/documents/Backups"
+bw_filename="bitwarden_$(date +%F).json.gpg"
+bw_outfile="$bw_backup_dir/$bw_filename"
 
-bw --raw export --format json \
-  | gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$outfile"
+bw --raw export --format json | 
+    gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$bw_outfile"
 
-cp "$outfile" "$HOME/Backups/phone/documents/Backups/"
+cp "$bw_outfile" "$bw_phone_dir/"
+
+# Remove old Bitwarden backups from both locations
+find "$bw_backup_dir" "$bw_phone_dir" -name "bitwarden_*.json.gpg" ! -name "$bw_filename" -delete
 
 echo "Bitwarden backup saved."
 
@@ -35,8 +42,8 @@ exclusions=(
   --exclude="$HOME/.cache"
   --exclude="$HOME/.local/share/Steam"
   --exclude="$HOME/.local/share/lutris"
-  --exclude="$HOME/.local/share/containers"
   --exclude="$HOME/.local/share/Trash"
+  --exclude="$HOME/.local/share/containers"
   --exclude="$HOME/Backups/phone"
   --exclude="$HOME/Music/phone"
 )
@@ -44,9 +51,9 @@ exclusions=(
 outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd.age"
 echo "Creating backup at $outfile..."
 
-tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null \
-  | pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" \
-  | gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
+tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
+    pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" |
+    gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
 
 echo "Sending to phone..."
 
@@ -56,8 +63,8 @@ echo "Sending to phone..."
 # backup to drive
 # ---------------
 
-src="/home/chika/"
-dest="/run/media/chika/rohan-backup/"
+src="$HOME/"
+dest="/run/media/$USER/rohan-backup/"
 
 echo "Saving NixOS configuration..."
 rsync -a /etc/nixos/* ~/Backups/nixos/
@@ -66,18 +73,16 @@ if ! mountpoint -q "$dest"; then echo "Backup destination $dest not found" && ex
 
 echo "Beginning /home backup..."
 
-sudo rsync \
-  --archive \
+sudo rsync -av \
   --delete-excluded \
-  --info=progress2 \
-  --verbose \
+  --info progress2 \
   --exclude "/Downloads" \
   --exclude "/Games" \
   --exclude "/.cache" \
   --exclude "/.local/share/Steam" \
   --exclude "/.local/share/lutris" \
   --exclude "/.local/share/Trash" \
-  --exclude="/.local/share/containers" \
+  --exclude "/.local/share/containers" \
   "$src" "$dest"
 
 # vim: set syntax=bash:
