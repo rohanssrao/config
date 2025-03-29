@@ -18,7 +18,7 @@ fi
 
 # Create Bitwarden backup with date-stamped filename
 bw_backup_dir="$HOME/Backups/firefox/extensions"
-bw_phone_dir="$HOME/Backups/phone/documents/Backups"
+bw_phone_dir="$HOME/Phone/Documents/Backups"
 bw_filename="bitwarden_$(date +%F).json.gpg"
 bw_outfile="$bw_backup_dir/$bw_filename"
 
@@ -31,33 +31,6 @@ cp "$bw_outfile" "$bw_phone_dir/"
 find "$bw_backup_dir" "$bw_phone_dir" -name "bitwarden_*.json.gpg" ! -name "$bw_filename" -delete
 
 echo "Bitwarden backup saved."
-
-# ---------------
-# backup to phone
-# ---------------
-
-exclusions=(
-  --exclude="$HOME/Downloads"
-  --exclude="$HOME/Games"
-  --exclude="$HOME/.cache"
-  --exclude="$HOME/.local/share/Steam"
-  --exclude="$HOME/.local/share/lutris"
-  --exclude="$HOME/.local/share/Trash"
-  --exclude="$HOME/.local/share/containers"
-  --exclude="$HOME/Backups/phone"
-  --exclude="$HOME/Music/phone"
-)
-
-outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd.age"
-echo "Creating backup at $outfile..."
-
-tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
-    pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" |
-    gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
-
-echo "Sending to phone..."
-
-/run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=7aa1dceaaaaa7d76 --share-file="$outfile"
 
 # ---------------
 # backup to drive
@@ -73,7 +46,7 @@ if ! mountpoint -q "$dest"; then echo "Backup destination $dest not found" && ex
 
 echo "Beginning /home backup..."
 
-sudo rsync -av \
+rsync -av \
   --delete-excluded \
   --info progress2 \
   --exclude "/Downloads" \
@@ -85,4 +58,31 @@ sudo rsync -av \
   --exclude "/.local/share/containers" \
   "$src" "$dest"
 
+# ---------------
+# backup to phone
+# ---------------
+
+exclusions=(
+  --exclude="$HOME/Downloads"
+  --exclude="$HOME/Games"
+  --exclude="$HOME/.cache"
+  --exclude="$HOME/.local/share/Steam"
+  --exclude="$HOME/.local/share/lutris"
+  --exclude="$HOME/.local/share/Trash"
+  --exclude="$HOME/.local/share/containers"
+  --exclude="$HOME/Phone"
+)
+
+outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd.age"
+echo "Creating backup at $outfile..."
+
+tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
+    pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" |
+    gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
+
+echo "Sending to phone..."
+
+/run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"
+
 # vim: set syntax=bash:
+
