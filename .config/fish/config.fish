@@ -32,5 +32,3 @@ bind -M insert ctrl-r 'history-pager'
 bind -M insert ctrl-f 'accept-autosuggestion'
 bind yy fish_clipboard_copy
 bind p fish_clipboard_paste
-
-fzf --fish | source

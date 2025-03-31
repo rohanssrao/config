@@ -45,7 +45,7 @@ function shell
     system = "'(nix eval --impure --raw --expr 'builtins.currentSystem')'";
     pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
   in {
-    devShells.x86_64-linux.default = pkgs.mkShell {
+    devShells.${system}.default = pkgs.mkShell {
       packages = with pkgs; [
         
       ];

@@ -3,86 +3,76 @@
 
 set -e -o pipefail
 
-# ----------------
-# bitwarden backup
-# ----------------
+usage() { echo "Usage: $0 {all|bitwarden|drive|phone}"; exit 1; }
+[ $# -ne 1 ] && usage
 
-read -s -p "Bitwarden master password: " password; echo
+bitwarden() {
+    read -s -p "Bitwarden master password: " password; echo
 
-if bw login --check &>/dev/null; then
-    export BW_SESSION=$(bw --raw unlock "$password")
-else
-    export BW_SESSION=$(bw --raw login rohanssrao@gmail.com "$password")
-fi
-[ -z "$BW_SESSION" ] && exit 1
+    if bw login --check &>/dev/null; then
+        export BW_SESSION=$(bw --raw unlock "$password")
+    else
+        export BW_SESSION=$(bw --raw login rohanssrao@gmail.com "$password")
+    fi
+    [ -z "$BW_SESSION" ] && exit 1
 
-# Create Bitwarden backup with date-stamped filename
-bw_backup_dir="$HOME/Backups/firefox/extensions"
-bw_phone_dir="$HOME/Phone/Documents/Backups"
-bw_filename="bitwarden_$(date +%F).json.gpg"
-bw_outfile="$bw_backup_dir/$bw_filename"
+    bw_backup_dir="$HOME/Backups/firefox/extensions"
+    bw_phone_dir="$HOME/Phone/Documents/Backups"
+    bw_filename="bitwarden_$(date +%F).json.gpg"
+    bw_outfile="$bw_backup_dir/$bw_filename"
 
-bw --raw export --format json | 
-    gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$bw_outfile"
+    bw --raw export --format json | gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$bw_outfile"
 
-cp "$bw_outfile" "$bw_phone_dir/"
+    cp "$bw_outfile" "$bw_phone_dir/"
+    find "$bw_backup_dir" "$bw_phone_dir" -name "bitwarden_*.json.gpg" ! -name "$bw_filename" -delete
 
-# Remove old Bitwarden backups from both locations
-find "$bw_backup_dir" "$bw_phone_dir" -name "bitwarden_*.json.gpg" ! -name "$bw_filename" -delete
+    echo "Bitwarden backup saved."
+}
 
-echo "Bitwarden backup saved."
+drive() {
+    sudo btrbk -c ~/.config/btrbk/btrbk.conf -v --progress run
+    udisksctl unmount -b /dev/disk/by-label/rohan-backup
+}
 
-# ---------------
-# backup to drive
-# ---------------
+phone() {
+    exclusions=(
+        --exclude="$HOME/Downloads"
+        --exclude="$HOME/Games"
+        --exclude="$HOME/.cache"
+        --exclude="$HOME/.local/share/Steam"
+        --exclude="$HOME/.local/share/lutris"
+        --exclude="$HOME/.local/share/Trash"
+        --exclude="$HOME/.local/share/containers"
+        --exclude="$HOME/Phone"
+    )
+    outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
 
-src="$HOME/"
-dest="/run/media/$USER/rohan-backup/"
+    echo "Creating backup at $outfile..."
+    tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
+        pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
 
-echo "Saving NixOS configuration..."
-rsync -a /etc/nixos/* ~/Backups/nixos/
+    echo "Sending to phone..."
+    /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"
+}
 
-if ! mountpoint -q "$dest"; then echo "Backup destination $dest not found" && exit 1; fi
-
-echo "Beginning /home backup..."
-
-rsync -av \
-  --delete-excluded \
-  --info progress2 \
-  --exclude "/Downloads" \
-  --exclude "/Games" \
-  --exclude "/.cache" \
-  --exclude "/.local/share/Steam" \
-  --exclude "/.local/share/lutris" \
-  --exclude "/.local/share/Trash" \
-  --exclude "/.local/share/containers" \
-  "$src" "$dest"
-
-# ---------------
-# backup to phone
-# ---------------
-
-exclusions=(
-  --exclude="$HOME/Downloads"
-  --exclude="$HOME/Games"
-  --exclude="$HOME/.cache"
-  --exclude="$HOME/.local/share/Steam"
-  --exclude="$HOME/.local/share/lutris"
-  --exclude="$HOME/.local/share/Trash"
-  --exclude="$HOME/.local/share/containers"
-  --exclude="$HOME/Phone"
-)
-
-outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd.age"
-echo "Creating backup at $outfile..."
-
-tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
-    pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" |
-    gpg --symmetric --passphrase="$(bw get password tarcrypt)" --pinentry-mode loopback --compress-algo none -o "$outfile"
-
-echo "Sending to phone..."
-
-/run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"
+case "$1" in
+  all)
+    bitwarden
+    drive
+    phone
+    ;;
+  bitwarden)
+    bitwarden
+    ;;
+  drive)
+    drive
+    ;;
+  phone)
+    phone
+    ;;
+  *)
+    usage
+    ;;
+esac
 
 # vim: set syntax=bash:
-
