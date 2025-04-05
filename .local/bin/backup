@@ -1,9 +1,9 @@
 #!/usr/bin/env nix
-#! nix shell nixpkgs#bitwarden-cli nixpkgs#pv --command bash
+#! nix shell nixpkgs#bitwarden-cli nixpkgs#pv nixpkgs#btrbk --command bash
 
 set -e -o pipefail
 
-usage() { echo "Usage: $0 {all|bitwarden|drive|phone}"; exit 1; }
+usage() { echo "Usage: $0 {all|bitwarden|disk|phone}"; exit 1; }
 [ $# -ne 1 ] && usage
 
 bitwarden() {
@@ -29,9 +29,27 @@ bitwarden() {
     echo "Bitwarden backup saved."
 }
 
-drive() {
-    sudo btrbk -c ~/.config/btrbk/btrbk.conf -v --progress run
-    udisksctl unmount -b /dev/disk/by-label/rohan-backup
+disk() {
+    rsync -a /etc/nixos/* ~/Backups/nixos/
+
+    src="$HOME/"
+    dest="/run/media/chika/backup/"
+    if ! mountpoint -q "$dest"; then echo "Backup destination $dest not mounted" && exit 1; fi
+    
+    rsync -av \
+        --delete-excluded \
+        --info progress2 \
+        --exclude "/Downloads" \
+        --exclude "/Games" \
+        --exclude "/.cache" \
+        --exclude "/.local/share/Steam" \
+        --exclude "/.local/share/lutris" \
+        --exclude "/.local/share/Trash" \
+        --exclude "/.local/share/containers" \
+        --exclude "/.mozilla/firefox/*/storage/default/https+++*" \
+        "$src" "$dest"
+
+    udisksctl umount -b /dev/disk/by-label/backup
 }
 
 phone() {
@@ -43,6 +61,7 @@ phone() {
         --exclude="$HOME/.local/share/lutris"
         --exclude="$HOME/.local/share/Trash"
         --exclude="$HOME/.local/share/containers"
+        --exclude "$HOME/.mozilla/firefox/*/storage/default/https+++*" \
         --exclude="$HOME/Phone"
     )
     outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
@@ -58,14 +77,14 @@ phone() {
 case "$1" in
   all)
     bitwarden
-    drive
+    disk
     phone
     ;;
   bitwarden)
     bitwarden
     ;;
-  drive)
-    drive
+  disk)
+    disk
     ;;
   phone)
     phone
