@@ -1,33 +1,9 @@
-#!/usr/bin/env nix
-#! nix shell nixpkgs#bitwarden-cli nixpkgs#pv nixpkgs#btrbk --command bash
+#!/usr/bin/env bash
 
 set -e -o pipefail
 
-usage() { echo "Usage: $0 {all|bitwarden|disk|phone}"; exit 1; }
+usage() { echo "Usage: $0 {all|disk|phone}"; exit 1; }
 [ $# -ne 1 ] && usage
-
-bitwarden() {
-    read -s -p "Bitwarden master password: " password; echo
-
-    if bw login --check &>/dev/null; then
-        export BW_SESSION=$(bw --raw unlock "$password")
-    else
-        export BW_SESSION=$(bw --raw login rohanssrao@gmail.com "$password")
-    fi
-    [ -z "$BW_SESSION" ] && exit 1
-
-    bw_backup_dir="$HOME/Backups/firefox/extensions"
-    bw_phone_dir="$HOME/Phone/Documents/Backups"
-    bw_filename="bitwarden_$(date +%F).json.gpg"
-    bw_outfile="$bw_backup_dir/$bw_filename"
-
-    bw --raw export --format json | gpg --symmetric --passphrase="$password" --pinentry-mode loopback -o "$bw_outfile"
-
-    cp "$bw_outfile" "$bw_phone_dir/"
-    find "$bw_backup_dir" "$bw_phone_dir" -name "bitwarden_*.json.gpg" ! -name "$bw_filename" -delete
-
-    echo "Bitwarden backup saved."
-}
 
 disk() {
     rsync -a /etc/nixos/* ~/Backups/nixos/
@@ -46,10 +22,11 @@ disk() {
         --exclude "/.local/share/lutris" \
         --exclude "/.local/share/Trash" \
         --exclude "/.local/share/containers" \
+        --exclude "/.config/Signal" \
         --exclude "/.mozilla/firefox/*/storage/default/https+++*" \
         "$src" "$dest"
 
-    udisksctl umount -b /dev/disk/by-label/backup
+    udisksctl unmount -b /dev/disk/by-label/backup
 }
 
 phone() {
@@ -61,14 +38,17 @@ phone() {
         --exclude="$HOME/.local/share/lutris"
         --exclude="$HOME/.local/share/Trash"
         --exclude="$HOME/.local/share/containers"
+        --exclude "$HOME/.config/Signal" \
         --exclude "$HOME/.mozilla/firefox/*/storage/default/https+++*" \
         --exclude="$HOME/Phone"
+        --exclude="$HOME/Pictures/google-photos"
+        --exclude="$HOME/Pictures/OnePlus"
     )
     outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
 
     echo "Creating backup at $outfile..."
     tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
-        pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
+        nix run nixpkgs\#pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
 
     echo "Sending to phone..."
     /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"
@@ -76,12 +56,8 @@ phone() {
 
 case "$1" in
   all)
-    bitwarden
     disk
     phone
-    ;;
-  bitwarden)
-    bitwarden
     ;;
   disk)
     disk
@@ -93,5 +69,3 @@ case "$1" in
     usage
     ;;
 esac
-
-# vim: set syntax=bash:
