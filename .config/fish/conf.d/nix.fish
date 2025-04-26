@@ -23,13 +23,14 @@ function run
 end
 
 function ,
-  set package (nix run nixpkgs#nix-search-cli -- -p $argv[1] | awk 'NR==1{print $1;}')
-  echo "[Using package $package]" >&2
+  if not set -q argv[1]; echo "usage: , <program>" >&2; return 1; end
+  set package (nix run nixpkgs#nix-search-cli -- --query-string="package_programs:($argv[1])" | awk '{print $1;}' | fzf -0 --height=20 --reverse) || return 1
+  if test -z "$package"; echo "no providers found for $argv[1]" >&2; return 1; end
   nix shell nixpkgs#$package --command $argv
 end
 
 function search
-  run nix-search-cli $argv
+  nix run nixpkgs#nix-search-cli -- $argv
 end
 
 function shell

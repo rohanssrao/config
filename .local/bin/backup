@@ -48,10 +48,11 @@ phone() {
 
     echo "Creating backup at $outfile..."
     tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
-        nix run nixpkgs\#pv -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
+        nix run nixpkgs\#pv -- -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
 
     echo "Sending to phone..."
-    /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"
+
+    until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=144fb098_229f_4a91_9412_bc9a89218d2b --share-file="$outfile"; do sleep 1; done
 }
 
 case "$1" in
