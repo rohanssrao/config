@@ -24,7 +24,7 @@ end
 
 function ,
   if not set -q argv[1]; echo "usage: , <program>" >&2; return 1; end
-  set package (nix run nixpkgs#nix-search-cli -- --query-string="package_programs:($argv[1])" | awk '{print $1;}' | fzf -0 --height=20 --reverse) || return 1
+  set package (nix run nixpkgs#nix-search-cli -- --query-string="package_programs:($argv[1])" | awk '{print $1;}' | fzf -0 --height=20 --reverse --bind one:accept) || return 1
   if test -z "$package"; echo "no providers found for $argv[1]" >&2; return 1; end
   nix shell nixpkgs#$package --command $argv
 end
