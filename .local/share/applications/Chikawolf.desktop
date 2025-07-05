@@ -1,0 +1,13 @@
+[Desktop Entry]
+Exec=librewolf -P Chika %U
+Icon=librewolf
+Name=Chikawolf
+NoDisplay=false
+Type=Application
+Name[en_US.UTF-8]=Librewolf (Chika)
+X-GNOME-FullName[en_US.UTF-8]=Librewolf (Chika)
+Comment[en_US.UTF-8]=Chikawolf
+Path=
+Terminal=false
+X-GNOME-UsesNotifications=false
+Categories=Network;

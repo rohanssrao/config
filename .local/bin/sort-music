@@ -37,7 +37,7 @@ for title, group in itertools.groupby(tracks, key=lambda t: f'{t['albumartist']}
     track_count = max(t['track'] for t in group)
 
     for t in group:
-        t['disc'] = t['disc'] + '.' if multi_disc else ''
+        t['disc'] = str(t['disc']) + '.' if multi_disc else ''
         t['track'] = str(t['track']).zfill(len(str(track_count)))
 
         dest = os.path.join(t['albumartist'], t['album'], f"{t['disc']}{t['track']} - {t['title']}.mp3")

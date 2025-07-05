@@ -24,6 +24,7 @@ disk() {
         --exclude "/.local/share/containers" \
         --exclude "/.config/Signal" \
         --exclude "/.mozilla/firefox/*/storage/default/https+++*" \
+        --exclude "/.librewolf/*/storage/default/https+++*" \
         "$src" "$dest"
 
     udisksctl unmount -b /dev/disk/by-label/backup
@@ -38,8 +39,9 @@ phone() {
         --exclude="$HOME/.local/share/lutris"
         --exclude="$HOME/.local/share/Trash"
         --exclude="$HOME/.local/share/containers"
-        --exclude "$HOME/.config/Signal" \
-        --exclude "$HOME/.mozilla/firefox/*/storage/default/https+++*" \
+        --exclude="$HOME/.config/Signal"
+        --exclude="$HOME/.mozilla/firefox/*/storage/default/https+++*"
+        --exclude="$HOME/.librewolf/*/storage/default/https+++*"
         --exclude="$HOME/Phone"
         --exclude="$HOME/Pictures/google-photos"
         --exclude="$HOME/Pictures/OnePlus"
@@ -47,11 +49,13 @@ phone() {
     outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
 
     echo "Creating backup at $outfile..."
-    tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null |
-        nix run nixpkgs\#pv -- -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null | awk '{print $1}')" > "$outfile"
+    until tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null \
+      | nix run nixpkgs\#pv -- -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null \
+      | awk '{print $1}')" > "$outfile"
+        do sleep 1
+    done
 
     echo "Sending to phone..."
-
     until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=0e173162a1ad4d08a680097d7f7fb022 --share-file="$outfile"; do sleep 1; done
 }
 
