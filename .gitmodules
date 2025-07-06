@@ -7,3 +7,6 @@
 [submodule ".mozilla/firefox/default"]
   path = .mozilla/firefox/default
   url = https://github.com/rohanssrao/foxium.git
+[submodule ".librewolf/default"]
+	path = .librewolf/default
+	url = /home/chika/.librewolf/default
