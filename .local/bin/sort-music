@@ -16,6 +16,8 @@ def sanitize(str_):
     for c in r'<>:"/\|?*': str_ = str_.replace(c, '').replace('  ', ' ')
     return str_
 
+files = glob.glob('./*.mp3', recursive=False)
+
 tracks = sorted([
     {
         'albumartist': sanitize(tag.get('albumartist', ['Unknown Artist'])[0].split('/')[0]),
@@ -25,7 +27,7 @@ tracks = sorted([
         'title': sanitize(tag.get('title', ['Unknown Title - ' + os.path.basename(f)[2:]])[0]),
         'filename': f,
     }
-    for f in glob.glob('./*.mp3', recursive=False)
+    for f in files
     for tag in [EasyID3(f)]
 ], key=lambda t: (t['albumartist'], t['album'], t['disc'], t['track']))
 
@@ -44,3 +46,9 @@ for title, group in itertools.groupby(tracks, key=lambda t: f'{t['albumartist']}
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         shutil.copy(t['filename'], dest)
         print(f'  {dest}')
+
+if input("\nDoes this look good? [y/N] ").strip().lower().startswith("y"):
+    for f in files:
+        os.remove(f)
+
+# vim: set syntax=python:

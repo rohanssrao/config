@@ -1,76 +1,64 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-set -e -o pipefail
-
-usage() { echo "Usage: $0 {all|disk|phone}"; exit 1; }
+usage(){ echo "Usage: $0 {all|disk|phone}"; exit 1; }
 [ $# -ne 1 ] && usage
 
-disk() {
-    rsync -a /etc/nixos/* ~/Backups/nixos/
+EXCLUDES=(
+  Downloads
+  Games
+  .openjfx
+  .minecraft
+  .vscode
+  .cache
+  .local/state
+  .local/share/Steam
+  .local/share/Trash
+  .local/share/containers
+  .config/Signal
+  .config/chromium
+  .config/vesktop
+  .var/app
+  .librewolf/*/storage/default/https+++*
+)
+PHONE_EXCLUDES=(
+  Phone
+  Pictures/google-photos
+  Pictures/OnePlus
+)
 
-    src="$HOME/"
-    dest="/run/media/chika/backup/"
-    if ! mountpoint -q "$dest"; then echo "Backup destination $dest not mounted" && exit 1; fi
-    
-    rsync -av \
-        --delete-excluded \
-        --info progress2 \
-        --exclude "/Downloads" \
-        --exclude "/Games" \
-        --exclude "/.cache" \
-        --exclude "/.local/share/Steam" \
-        --exclude "/.local/share/lutris" \
-        --exclude "/.local/share/Trash" \
-        --exclude "/.local/share/containers" \
-        --exclude "/.config/Signal" \
-        --exclude "/.mozilla/firefox/*/storage/default/https+++*" \
-        --exclude "/.librewolf/*/storage/default/https+++*" \
-        "$src" "$dest"
+disk(){
+  EXCLUDES=( "${EXCLUDES[@]/#/--exclude=/}" )
+  rsync -a /etc/nixos/ ~/Backups/nixos/
 
-    udisksctl unmount -b /dev/disk/by-label/backup
+  dest="/run/media/chika/backup/"
+  mountpoint -q "$dest" || { echo "Destination not mounted"; exit 1; }
+
+  rsync -av --delete-excluded --info=progress2 \
+    "${EXCLUDES[@]}" \
+    "$HOME/." "$dest"
+
+  udisksctl unmount -b /dev/disk/by-label/backup
 }
 
-phone() {
-    exclusions=(
-        --exclude="$HOME/Downloads"
-        --exclude="$HOME/Games"
-        --exclude="$HOME/.cache"
-        --exclude="$HOME/.local/share/Steam"
-        --exclude="$HOME/.local/share/lutris"
-        --exclude="$HOME/.local/share/Trash"
-        --exclude="$HOME/.local/share/containers"
-        --exclude="$HOME/.config/Signal"
-        --exclude="$HOME/.mozilla/firefox/*/storage/default/https+++*"
-        --exclude="$HOME/.librewolf/*/storage/default/https+++*"
-        --exclude="$HOME/Phone"
-        --exclude="$HOME/Pictures/google-photos"
-        --exclude="$HOME/Pictures/OnePlus"
-    )
-    outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
+phone(){
+  EXCLUDES=( "${EXCLUDES[@]/#/--exclude=./}" "${PHONE_EXCLUDES[@]/#/--exclude=./}" )
 
-    echo "Creating backup at $outfile..."
-    until tar "${exclusions[@]}" --zstd -cf - "$HOME" 2>/dev/null \
-      | nix run nixpkgs\#pv -- -s "$(du -sb "$HOME" "${exclusions[@]}" 2>/dev/null \
-      | awk '{print $1}')" > "$outfile"
-        do sleep 1
-    done
+  outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
+  echo "Creating $outfile…"
+  until
+    tar -C "$HOME" "${EXCLUDES[@]}" --zstd -cf - . 2>/dev/null \
+      | nix run nixpkgs#pv -- -s "$(cd "$HOME"; du -sb "${EXCLUDES[@]}" 2>/dev/null | cut -f1)" \
+      > "$outfile";
+  do sleep 1; done
 
-    echo "Sending to phone..."
-    until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=0e173162a1ad4d08a680097d7f7fb022 --share-file="$outfile"; do sleep 1; done
+  echo "Sending to phone…"
+  until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=0e173162a1ad4d08a680097d7f7fb022 --share-file="$outfile"; do sleep 1; done
 }
 
 case "$1" in
-  all)
-    disk
-    phone
-    ;;
-  disk)
-    disk
-    ;;
-  phone)
-    phone
-    ;;
-  *)
-    usage
-    ;;
+  all)   disk; phone ;;
+  disk)  disk        ;;
+  phone) phone       ;;
+  *)     usage       ;;
 esac
