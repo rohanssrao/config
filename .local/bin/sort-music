@@ -6,49 +6,40 @@
 # ]
 # ///
 
+from pathlib import Path
+import itertools, re
 from mutagen.easyid3 import EasyID3
-import itertools
-import os
-import glob
-import shutil
 
-def sanitize(str_):
-    for c in r'<>:"/\|?*': str_ = str_.replace(c, '').replace('  ', ' ')
-    return str_
+clean = lambda s: re.sub(r'\s+', ' ', s.translate({c: None for c in r'<>:"/\|?*'})).strip()
 
-files = glob.glob('./*.mp3', recursive=False)
-
-tracks = sorted([
+tracks = [
     {
-        'albumartist': sanitize(tag.get('albumartist', ['Unknown Artist'])[0].split('/')[0]),
-        'album': sanitize(tag.get('album', ['Unknown Album'])[0]),
-        'disc': int(tag.get('discnumber', ['1/1'])[0].split('/')[0]),
-        'track': int(tag.get('tracknumber', ['1/1'])[0].split('/')[0]),
-        'title': sanitize(tag.get('title', ['Unknown Title - ' + os.path.basename(f)[2:]])[0]),
-        'filename': f,
+        'albumartist': clean(EasyID3(p).get('albumartist', ['Unknown'])[0].split('/')[0]),
+        'album': clean(EasyID3(p).get('album', [p.stem])[0]),
+        'disc': int(EasyID3(p).get('discnumber', ['1'])[0].split('/')[0]),
+        'track': int(EasyID3(p).get('tracknumber', ['1'])[0].split('/')[0]),
+        'title': clean(EasyID3(p).get('title', [p.stem])[0]),
+        'path': p
     }
-    for f in files
-    for tag in [EasyID3(f)]
-], key=lambda t: (t['albumartist'], t['album'], t['disc'], t['track']))
+    for p in Path().glob('*.mp3')
+]
+tracks.sort(key=lambda t: (t['albumartist'], t['album'], t['disc'], t['track']))
 
-for title, group in itertools.groupby(tracks, key=lambda t: f'{t['albumartist']} - {t['album']}'):
+albums = [(k, list(g)) for k, g in itertools.groupby(tracks, key=lambda t: (t['albumartist'], t['album']))]
 
-    print(title)
-    group = list(group)
-    multi_disc = max([t['disc'] for t in group]) > 1
-    track_count = max(t['track'] for t in group)
-
+for (artist, album), group in albums:
+    print(f'{artist} - {album}')
+    multi_disc = max(t['disc'] for t in group) > 1
+    width = len(str(max(t['track'] for t in group)))
     for t in group:
-        t['disc'] = str(t['disc']) + '.' if multi_disc else ''
-        t['track'] = str(t['track']).zfill(len(str(track_count)))
+        prefix = f"{t['disc']}." if multi_disc else ''
+        t['dest'] = Path(artist, album, f"{prefix}{t['track']:0{width}d} - {t['title']}.mp3")
+        print(f'  {t["dest"]}')
 
-        dest = os.path.join(t['albumartist'], t['album'], f"{t['disc']}{t['track']} - {t['title']}.mp3")
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        shutil.copy(t['filename'], dest)
-        print(f'  {dest}')
-
-if input("\nDoes this look good? [y/N] ").strip().lower().startswith("y"):
-    for f in files:
-        os.remove(f)
+if input('\nProceed? [y/N] ').strip().lower().startswith('y'):
+    for _, group in albums:
+        for t in group:
+            t['dest'].parent.mkdir(parents=True, exist_ok=True)
+            t['path'].rename(t['dest'])
 
 # vim: set syntax=python:
