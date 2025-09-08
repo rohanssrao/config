@@ -13,10 +13,14 @@ EXCLUDES=(
   .cache
   .local/state
   .local/share/Steam
+  .local/share/lutris
+  .local/share/umu
+  .local/share/nvim
   .local/share/Trash
   .local/share/containers
   .config/Signal
   .config/chromium
+  .config/BraveSoftware
   .config/vesktop
   .var/app
   .librewolf/*/storage/default/https+++*
@@ -28,27 +32,27 @@ PHONE_EXCLUDES=(
 )
 
 disk(){
-  EXCLUDES=( "${EXCLUDES[@]/#/--exclude=/}" )
+  EXCLUDE_FLAGS=( "${EXCLUDES[@]/#/--exclude=/}" )
   rsync -a /etc/nixos/ ~/Backups/nixos/
 
   dest="/run/media/chika/backup/"
   mountpoint -q "$dest" || { echo "Destination not mounted"; exit 1; }
 
   rsync -av --delete-excluded --info=progress2 \
-    "${EXCLUDES[@]}" \
+    "${EXCLUDE_FLAGS[@]}" \
     "$HOME/." "$dest"
 
   udisksctl unmount -b /dev/disk/by-label/backup
 }
 
 phone(){
-  EXCLUDES=( "${EXCLUDES[@]/#/--exclude=./}" "${PHONE_EXCLUDES[@]/#/--exclude=./}" )
+  EXCLUDE_FLAGS=( "${EXCLUDES[@]/#/--exclude=./}" "${PHONE_EXCLUDES[@]/#/--exclude=./}" )
 
   outfile="$HOME/Downloads/backup-$(date +%Y%m%d).tar.zstd"
   echo "Creating $outfile…"
   until
-    tar -C "$HOME" "${EXCLUDES[@]}" --zstd -cf - . 2>/dev/null \
-      | nix run nixpkgs#pv -- -s "$(cd "$HOME"; du -sb "${EXCLUDES[@]}" 2>/dev/null | cut -f1)" \
+    tar -C "$HOME" "${EXCLUDE_FLAGS[@]}" --zstd -cf - . 2>/dev/null \
+      | nix run nixpkgs#pv -- -s "$(cd "$HOME"; du -sb "${EXCLUDE_FLAGS[@]}" 2>/dev/null | cut -f1)" \
       > "$outfile";
   do sleep 1; done
 
