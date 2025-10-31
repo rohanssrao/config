@@ -1,21 +1,5 @@
 set flake "/etc/nixos"
 
-function run
-  nix run --offline nixpkgs#$argv[1] -- $argv[2..-1]
-end
-
-function search
-  run nix-search-cli $argv
-end
-
-function ,
-  if not set -q argv[1]; echo "usage: , <program>" >&2; return 1; end
-  if command -v $argv[1] &> /dev/null; $argv; return; end
-  set package (search --query-string="package_programs:($argv[1])" | awk '{print $1}' | sort -u | fzf -0 --height=20 --reverse --bind "one:accept,alt-j:down,alt-k:up") || return 1
-  if test -z "$package"; echo "no providers found for $argv[1]" >&2; return 1; end
-  nix shell --inputs-from $flake nixpkgs#$package --command $argv
-end
-
 function edit
   $EDITOR $flake/flake.nix
 end
@@ -27,11 +11,31 @@ function rebuild
   git -C $flake diff-index --quiet HEAD; or git -C $flake commit -q -m "rebuild"
 end
 
+function upgrade
+  rebuild -u
+end
+
 function push
   pushd $flake
   git reset --soft origin/main
   git diff --staged
   git commit && git push
+end
+
+function run
+  nix run --offline nixpkgs#$argv[1] -- $argv[2..-1]
+end
+
+function search
+  run nix-search-cli $argv
+end
+
+function ,
+  if not set -q argv[1]; echo "usage: , <program>" >&2; return 1; end
+  if command -q $argv[1]; $argv; return; end
+  set package (search --query-string="package_programs:($argv[1])" | awk '{print $1}' | sort -u | fzf -0 --height=20 --reverse --bind "one:accept,alt-j:down,alt-k:up") || return 1
+  if test -z "$package"; echo "no providers found for $argv[1]" >&2; return 1; end
+  nix shell nixpkgs#$package --command $argv
 end
 
 function shell
