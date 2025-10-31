@@ -57,7 +57,7 @@ phone(){
   do sleep 1; done
 
   echo "Sending to phone…"
-  until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=0e173162a1ad4d08a680097d7f7fb022 --share-file="$outfile"; do sleep 1; done
+  until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=f2fe12d76907430c873565ea06c09060 --share-file="$outfile"; do sleep 1; done
 }
 
 case "$1" in
