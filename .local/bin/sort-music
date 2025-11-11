@@ -10,7 +10,7 @@ from pathlib import Path
 import itertools, re
 from mutagen.easyid3 import EasyID3
 
-clean = lambda s: re.sub(r'\s+', ' ', s.translate({c: None for c in r'<>:"/\|?*'})).strip()
+clean = lambda s: re.sub(r'\s+', ' ', s.translate(str.maketrans('', '', '<>:"/\\|?*'))).strip()
 
 tracks = [
     {
