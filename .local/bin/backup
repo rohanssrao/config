@@ -22,6 +22,7 @@ EXCLUDES=(
   .config/chromium
   .config/BraveSoftware
   .config/vesktop
+  ".tor project"
   .var/app
   .librewolf/*/storage/default/https+++*
 )
@@ -58,6 +59,7 @@ phone(){
 
   echo "Sending to phone…"
   until /run/current-system/sw/share/gnome-shell/extensions/gsconnect@andyholmes.github.io/service/daemon.js --device=f2fe12d76907430c873565ea06c09060 --share-file="$outfile"; do sleep 1; done
+  cd ~/Downloads
 }
 
 case "$1" in
